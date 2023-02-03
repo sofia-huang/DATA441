@@ -1,1 +1,1 @@
-# advappliedmachinelearning
+# Adv. Applied Machine Learning
