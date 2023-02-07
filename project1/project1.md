@@ -15,4 +15,8 @@ The algorithm learns the optimal weights or coefficients of the input features a
 
 Now that we know the foundation, how does an algorithm make predictions when the relationship between the independent and dependent variables are ***non-linear***? We use locally weighted regression (LOWESS).
 
-***Locally weighted regression***: A technique that modifies the linear regression to make it fit non-linear functions.  
+***Locally weighted regression***: A technique that modifies the linear regression to make it fit non-linear functions. The non-parametric algorithm fits a linear model to localized subsets of the data to build a function that describes the variation in the data, point by point. Basically, there are many small local functions rather than one global function. The weights (parameters) are computed locally (for each data point). This makes minimizing the errors easier and means the parameters are unique to each data point (instead of fitting a fixed set of parameters to the data). 
+
+We use LOWESS when the distribution of data is non-linear and the number of features is smaller, as the process is highly exhaustive and computationally expensive. It also requires a large/dense dataset to produce good results since LOWESS relies on the local data structure when fitting the model.
+
+
