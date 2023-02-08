@@ -11,8 +11,6 @@ When there are multiple independent variables, this is called multiple linear re
 
   * _Predicted Value = weight<sub>1</sub> * Feature<sub>1</sub> + weight<sub>2</sub> * Feature<sub>2</sub> + ... + weight<sub>p</sub> * Feature<sub>p</sub>_
 
- $$\text{Predicted Value} = weight_1 \cdot \text{Feature}_1 + weight_2 \cdot \text{Feature}_2 + ... + weight_p \cdot \text{Feature}_p $$
-
 The algorithm learns the optimal weights or coefficients of the input features as an iterative process, usually through a method such as gradient descent. 
 
 Now that we know the foundation, how does an algorithm make predictions when the relationship between the independent and dependent variables are ***non-linear***? We use locally weighted regression (LOWESS).
