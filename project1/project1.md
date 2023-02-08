@@ -9,7 +9,7 @@ In this page, I will explain my understanding of locally weighted regression or 
 
 When there are multiple independent variables, this is called multiple linear regression and the idea is as follows: 
 
-         _Predicted Value = weight<sub>1</sub> * Feature<sub>1</sub> + weight<sub>2</sub> * Feature<sub>2</sub> + ... + weight<sub>p</sub> * Feature<sub>p</sub>_
+  * _Predicted Value = weight<sub>1</sub> * Feature<sub>1</sub> + weight<sub>2</sub> * Feature<sub>2</sub> + ... + weight<sub>p</sub> * Feature<sub>p</sub>_
 
  $$\text{Predicted Value} = weight_1 \cdot \text{Feature}_1 + weight_2 \cdot \text{Feature}_2 + ... + weight_p \cdot \text{Feature}_p $$
 
