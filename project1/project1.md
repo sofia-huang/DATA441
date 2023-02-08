@@ -9,10 +9,7 @@ In this page, I will explain my understanding of locally weighted regression or 
 
 When there are multiple independent variables, this is called multiple linear regression and the idea is as follows: 
 
- {% raw %}
  $$\text{Predicted Value} = weight_1 \cdot \text{Feature}_1 + weight_2 \cdot \text{Feature}_2 + ... + weight_p \cdot \text{Feature}_p $$
- {% endraw %}
-
 
 The algorithm learns the optimal weights or coefficients of the input features as an iterative process, usually through a method such as gradient descent. 
 
