@@ -19,4 +19,7 @@ Now that we know the foundation, how does an algorithm make predictions when the
 
 We use LOWESS when the distribution of data is non-linear and the number of features is smaller, as the process is highly exhaustive and computationally expensive. It also requires a large/dense dataset to produce good results since LOWESS relies on the local data structure when fitting the model.
 
+```Python
+# insert code here
+```
 
