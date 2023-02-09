@@ -65,6 +65,31 @@ def Epanechnikov(x):
 def Quartic(x):
   return np.where(np.abs(x)>1,0,15/16*(1-np.abs(x)**2)**2) 
 ```
+Next, I created noisy, non linear data and ran the LOWESS function on it, using different kernels. I also ran a weak, linear regression model on the data to show the difference between LOWESS and linear regression on non linear data.
+
+```Python
+x = np.linspace(0,2,201)
+noise = np.random.normal(loc = 0, scale = .2, size = len(x))
+y = np.sin(x**2 * 1.5 * np.pi ) 
+y_noise = y + noise
+kernel = tricubic
+kernel2 = Epanechnikov
+kernel3 = Quartic
+lm = LinearRegression()
+# run lowess with different kernels
+yest = lowess(x,y,kernel,0.04)
+yest2 = lowess(x,y,kernel2,0.04)
+yest3 = lowess(x,y,kernel3,0.04)
+
+# Creating a weak learner using linear regression on nonlinear data
+xlr = x.reshape(-1,1)
+y_noiselr = y_noise.reshape(-1,1)
+lr = LinearRegression()
+lr.fit(xlr,y_noiselr)
+yhat_lr = lr.predict(xlr)
+```
+Here is the result. I used Matplotlib to create this graph. Clearly, we cannot use linear regression on data like this and we must use something like locally weighted regression instead. In this example, we can't see much difference between the various kernels, but perhaps that's not a bad thing, it seems that any one we choose will give us good results. 
+
 <img src="project1_graphs/lowess-intro.png" width="1000" height="400" /> 
 
 <img src="project1_graphs/lowess-cardata.png" width="1000" height="400" /> 
