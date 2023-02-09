@@ -19,7 +19,50 @@ Now that we know the foundation, how does an algorithm make predictions when the
 
 We use LOWESS when the distribution of data is non-linear and the number of features is smaller, as the process is highly exhaustive and computationally expensive. It also requires a large/dense dataset to produce good results since LOWESS relies on the local data structure when fitting the model.
 
+# Python Code and Visualizations of Locally Weighted Regression
+
+Below is the code for a basic LOWESS regression function.
+
 ```Python
-# insert code here
+# after inserting the proper libraries...
+def kernel_function(xi,x0,kern, tau): 
+    return kern((xi - x0)/(2*tau))
+
+def weights_matrix(x,kern,tau):
+  n = len(x)
+  return np.array([kernel_function(x,x[i],kern,tau) for i in range(n)]) 
+
+def lowess(x, y, kern, tau=0.05):
+    # tau is called bandwidth K((x-x[i])/(2*tau))
+    # tau is a hyper-parameter
+    n = len(x)
+    yest = np.zeros(n)
+    
+    #Initializing all weights from the bell shape kernel function       
+    #Looping through all x-points
+    
+    w = weights_matrix(x,kern,tau)    
+    
+    #Looping through all x-points and fitting the local regression model
+    for i in range(n):
+        weights = w[:, i]
+        lm.fit(np.diag(w[:,i]).dot(x.reshape(-1,1)),np.diag(w[:,i]).dot(y.reshape(-1,1)))
+        yest[i] = lm.predict(x[i].reshape(-1,1)) 
+
+    return yest
+```
+
+```Python
+# Tricubic Kernel
+def tricubic(x):
+  return np.where(np.abs(x)>1,0,(1-np.abs(x)**3)**3)   
+  
+# Epanechnikov Kernel
+def Epanechnikov(x):
+  return np.where(np.abs(x)>1,0,3/4*(1-np.abs(x)**2)) 
+  
+# Quartic Kernel
+def Quartic(x):
+  return np.where(np.abs(x)>1,0,15/16*(1-np.abs(x)**2)**2) 
 ```
 
