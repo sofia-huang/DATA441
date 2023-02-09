@@ -119,7 +119,126 @@ def lowess_reg(x, y, xnew, kern, tau):
 
 <img src="project1_graphs/lowess-cardata.png" width="1000" height="400" /> 
 
+#### Adapting LOWESS function to be scikit-learn compatible
+Next, in class we were shown how to transform the LOWESS function to be a scikit-learn compatible class so we can use .fit() and .predict(). This makes it more simple and easier to use. 
+
+```Python
+class Lowess:
+    def __init__(self, kernel = Gaussian, tau=0.05):
+        self.kernel = kernel
+        self.tau = tau
+    
+    def fit(self, x, y):
+        kernel = self.kernel
+        tau = self.tau
+        self.xtrain_ = x
+        self.yhat_ = y
+
+    def predict(self, x_new):
+        check_is_fitted(self)
+        x = self.xtrain_
+        y = self.yhat_
+
+        w = weights_matrix(x,x_new,self.kernel,self.tau)
+
+        if np.isscalar(x_new):
+          lm.fit(np.diag(w).dot(x.reshape(-1,1)),np.diag(w).dot(y.reshape(-1,1)))
+          yest = lm.predict([[x_new]])[0][0]
+        elif len(x.shape)==1:
+          n = len(x_new)
+          yest_test = np.zeros(n)
+          #Looping through all x-points
+          for i in range(n):
+            lm.fit(np.diag(w[i,:]).dot(x.reshape(-1,1)),np.diag(w[i,:]).dot(y.reshape(-1,1)))
+            yest_test[i] = lm.predict(x_new[i].reshape(-1,1))
+        else:
+          n = len(x_new)
+          yest_test = np.zeros(n)
+          #Looping through all x-points
+          for i in range(n):
+            lm.fit(np.diag(w[i,:]).dot(x),np.diag(w[i,:]).dot(y.reshape(-1,1)))
+            yest_test[i] = lm.predict(x_new[i].reshape(1,-1))
+        return yest_test
+```
+Using this newly created LOWESS class, I created another noisy, non linear function and ran LOWESS on the data with different kernels. I also computed the mean squared error for each kernel:
+
+Epanechnikov - 0.05732
+Gaussian - 0.08125
+Tricubic - 0.05939
+Quartic - 0.05970
+
 <img src="project1_graphs/lowess-kernels-sin.png" width="1200" height="720" /> 
+
+Finally, I did a k-fold cross validation to choose which kernel to use and also what tau value. Tau is the hyper-parameter that determines the width of the kernel or how big the neighborhood is around the local regression point when calculating weights. The kernel is the function that is used to calculate the weight of each training point based on its distance from the local test point.
+
+```Python
+kf = KFold(n_splits=10,shuffle=True,random_state=123)
+mse_test_lowess_ep = []
+mse_test_lowess_gs = []
+mse_test_lowess_tr = []
+mse_test_lowess_qc = []
+
+for idxtrain, idxtest in kf.split(x):
+  xtrain = x[idxtrain]
+  xtest = x[idxtest]
+  ytrain = ynoisy[idxtrain]
+  ytest = ynoisy[idxtest]
+
+  model_lw_ep = Lowess(kernel=Epanechnikov,tau=0.02)
+  model_lw_gs = Lowess(kernel=Gaussian,tau=0.02)
+  model_lw_tr = Lowess(kernel=Tricubic,tau=0.02)
+  model_lw_qc = Lowess(kernel=Quartic,tau=0.02)
+
+  model_lw_ep.fit(xtrain,ytrain)
+  model_lw_gs.fit(xtrain,ytrain)
+  model_lw_tr.fit(xtrain,ytrain)
+  model_lw_qc.fit(xtrain,ytrain)
+
+  mse_test_lowess_ep.append(mse(ytest,model_lw_ep.predict(xtest)))
+  mse_test_lowess_gs.append(mse(ytest,model_lw_gs.predict(xtest)))
+  mse_test_lowess_tr.append(mse(ytest,model_lw_tr.predict(xtest)))
+  mse_test_lowess_qc.append(mse(ytest,model_lw_qc.predict(xtest)))
+
+print('The validated MSE for Lowess with Epanechnikov kernel is : '+str(np.mean(mse_test_lowess_ep)))
+print('The validated MSE for Lowess with Gaussian kernel is : '+str(np.mean(mse_test_lowess_gs)))
+print('The validated MSE for Lowess with Tricubic kernel is : '+str(np.mean(mse_test_lowess_tr)))
+print('The validated MSE for Lowess with Quartic kernel is : '+str(np.mean(mse_test_lowess_qc)))
+```
+The output was:
+  The validated MSE for Lowess with Epanechnikov kernel is : 0.05441352570505785
+  The validated MSE for Lowess with Gaussian kernel is : 0.07647261731338811
+  The validated MSE for Lowess with Tricubic kernel is : 0.05450102935602012
+  The validated MSE for Lowess with Quartic kernel is : 0.05508064325500174
+  
+I also performed k-fold validation to optimize the tau paramter.
+
+```Python
+kf = KFold(n_splits=10,shuffle=True,random_state=123)
+mse_test_lowess = []
+taus = []
+t_range = np.linspace(0.01,1,num=100)
+
+for t in t_range:
+  model_lw = Lowess(kernel=Epanechnikov,tau=t)
+
+  for idxtrain, idxtest in kf.split(x):
+    xtrain = x[idxtrain]
+    xtest = x[idxtest]
+    ytrain = ynoisy[idxtrain]
+    ytest = ynoisy[idxtest]    
+
+    model_lw.fit(xtrain,ytrain)
+    mse_test_lowess.append(mse(ytest,model_lw.predict(xtest)))
+    taus.append(t)
+idx = np.argmin(mse_test_lowess)
+print('The validated MSE for Lowess is : '+str(np.mean(mse_test_lowess)))
+print('The optimal tau is ' + str(taus[idx]) + '; and its corresponding MSE is ' + str(np.min(mse_test_lowess)))
+```
+This was the output: 
+  The validated MSE for Lowess is : 0.458179157026943
+  The optimal tau is 0.02; and its corresponding MSE is 0.04005951952523736
+  
+The final graph is using the optimized LOWESS model on the noisy sin function.
 
 <img src="project1_graphs/lowess-optimized.png" width="800" height="400" /> 
 
