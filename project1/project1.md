@@ -51,7 +51,7 @@ def lowess(x, y, kern, tau=0.05):
 
     return yest
 ```
-
+Here are some various kernels we can use.
 ```Python
 # Tricubic Kernel
 def tricubic(x):
@@ -65,4 +65,3 @@ def Epanechnikov(x):
 def Quartic(x):
   return np.where(np.abs(x)>1,0,15/16*(1-np.abs(x)**2)**2) 
 ```
-
