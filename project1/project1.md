@@ -90,7 +90,7 @@ yhat_lr = lr.predict(xlr)
 ```
 Here is the result. I used Matplotlib to create this graph. Clearly, we cannot use linear regression on data like this and we must use something like locally weighted regression instead. In this example, we can't see much difference between the various kernels, but perhaps that's not a bad thing, it seems that any one we choose will give us good results. 
 
-<img src="project1_graphs/lowess-intro.png" width="1000" height="400" /> 
+<img src="project1_graphs/lowess-intro.png" width="1000" height="200" /> 
 
 Now, I did the same process, but used real data in place of the simulated sin function. I used the Cars.csv dataset provided in class. I used a slightly different variation of the LOWESS function that uses interpolation. Again, not mmuch difference bewteen the kernels, but clearly LOWESS does a better job of modeling the data than linear regression does.
 
@@ -117,7 +117,7 @@ def lowess_reg(x, y, xnew, kern, tau):
     return f(xnew)
 ```
 
-<img src="project1_graphs/lowess-cardata.png" width="1000" height="400" /> 
+<img src="project1_graphs/lowess-cardata.png" width="1000" height="200" /> 
 
 #### Adapting LOWESS function to be scikit-learn compatible
 Next, in class we were shown how to transform the LOWESS function to be a scikit-learn compatible class so we can use .fit() and .predict(). This makes it more simple and easier to use. 
@@ -167,7 +167,7 @@ Gaussian - 0.08125
 Tricubic - 0.05939
 Quartic - 0.05970
 
-<img src="project1_graphs/lowess-kernels-sin.png" width="1200" height="720" /> 
+<img src="project1_graphs/lowess-kernels-sin.png" width="1200" height="500" /> 
 
 Finally, I did a k-fold cross validation to choose which kernel to use and also what tau value. Tau is the hyper-parameter that determines the width of the kernel or how big the neighborhood is around the local regression point when calculating weights. The kernel is the function that is used to calculate the weight of each training point based on its distance from the local test point.
 
