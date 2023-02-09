@@ -90,7 +90,7 @@ yhat_lr = lr.predict(xlr)
 ```
 Here is the result. I used Matplotlib to create this graph. Clearly, we cannot use linear regression on data like this and we must use something like locally weighted regression instead. In this example, we can't see much difference between the various kernels, but perhaps that's not a bad thing, it seems that any one we choose will give us good results. 
 
-<img src="project1_graphs/lowess-intro.png" width="1000" height="200" /> 
+<img src="project1_graphs/lowess-intro.png" width="1400" height="400" /> 
 
 Now, I did the same process, but used real data in place of the simulated sin function. I used the Cars.csv dataset provided in class. I used a slightly different variation of the LOWESS function that uses interpolation. Again, not mmuch difference bewteen the kernels, but clearly LOWESS does a better job of modeling the data than linear regression does.
 
@@ -117,7 +117,7 @@ def lowess_reg(x, y, xnew, kern, tau):
     return f(xnew)
 ```
 
-<img src="project1_graphs/lowess-cardata.png" width="1000" height="200" /> 
+<img src="project1_graphs/lowess-cardata.png" width="1400" height="400" /> 
 
 #### Adapting LOWESS function to be scikit-learn compatible
 Next, in class we were shown how to transform the LOWESS function to be a scikit-learn compatible class so we can use .fit() and .predict(). This makes it more simple and easier to use. 
@@ -242,3 +242,4 @@ The final graph is using the optimized LOWESS model on the noisy sin function.
 
 <img src="project1_graphs/lowess-optimized.png" width="800" height="400" /> 
 
+The full Python notebook is linked here: [Project 1 Python Notebook](https://colab.research.google.com/drive/1cpUCM7N4mryhDvETJjrGiI5MNH44wlwR#scrollTo=1HGeqENmxPgk) 
