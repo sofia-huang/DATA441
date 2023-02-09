@@ -65,11 +65,11 @@ def Epanechnikov(x):
 def Quartic(x):
   return np.where(np.abs(x)>1,0,15/16*(1-np.abs(x)**2)**2) 
 ```
-<img src="project1/project1_graphs/lowess_intro.png" width="120" height="160" /> 
+<img src="project1_graphs/lowess_intro.png" width="120" height="160" /> 
 
-<img src="project1/project1_graphs/lowess_cardata.png" width="120" height="160" /> 
+<img src="project1_graphs/lowess_cardata.png" width="120" height="160" /> 
 
-<img src="project1/project1_graphs/lowess_kernels_sin.png" width="120" height="160" /> 
+<img src="project1_graphs/lowess_kernels_sin.png" width="120" height="160" /> 
 
-<img src="project1/project1_graphs/lowess_optimized.png" width="120" height="160" /> 
+<img src="project1_graphs/lowess_optimized.png" width="120" height="160" /> 
 
