@@ -92,6 +92,31 @@ Here is the result. I used Matplotlib to create this graph. Clearly, we cannot u
 
 <img src="project1_graphs/lowess-intro.png" width="1000" height="400" /> 
 
+Now, I did the same process, but used real data in place of the simulated sin function. I used the Cars.csv dataset provided in class. I used a slightly different variation of the LOWESS function that uses interpolation. Again, not mmuch difference bewteen the kernels, but clearly LOWESS does a better job of modeling the data than linear regression does.
+
+```Python
+def lowess_reg(x, y, xnew, kern, tau):
+    # tau is called bandwidth K((x-x[i])/(2*tau))
+    # IMPORTANT: we expect x to the sorted increasingly
+    n = len(x)
+    yest = np.zeros(n)
+
+    #Initializing all weights from the bell shape kernel function    
+    w = np.array([kern((x - x[i])/(2*tau)) for i in range(n)])     
+    
+    #Looping through all x-points
+    for i in range(n):
+        weights = w[:, i]
+        b = np.array([np.sum(weights * y), np.sum(weights * y * x)])
+        A = np.array([[np.sum(weights), np.sum(weights * x)],
+                    [np.sum(weights * x), np.sum(weights * x * x)]])
+        #theta = linalg.solve(A, b) # A*theta = b
+        theta, res, rnk, s = linalg.lstsq(A, b)
+        yest[i] = theta[0] + theta[1] * x[i] 
+    f = interp1d(x, yest,fill_value='extrapolate')
+    return f(xnew)
+```
+
 <img src="project1_graphs/lowess-cardata.png" width="1000" height="400" /> 
 
 <img src="project1_graphs/lowess-kernels-sin.png" width="1200" height="720" /> 
