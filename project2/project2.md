@@ -69,3 +69,5 @@ def lw_ag_md(x, y, xnew,f=2/3,iter=3, intercept=True):
     output[np.isnan(output)] = g(xnew[np.isnan(output)])
   return output
   ```
+  
+[Back to Project Index](https://sofia-huang.github.io/DATA441/)
