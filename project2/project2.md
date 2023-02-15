@@ -22,7 +22,8 @@ def lw_ag_md(x, y, xnew,f=2/3,iter=3, intercept=True):
   # y estimates
   yest = np.zeros(n)
 
-  if len(y.shape)==1: # here we make column vectors
+  if len(y.shape)==1: 
+    # here we make column vectors
     y = y.reshape(-1,1)
 
   if len(x.shape)==1:
@@ -34,11 +35,10 @@ def lw_ag_md(x, y, xnew,f=2/3,iter=3, intercept=True):
     x1 = x
 
   h = [np.sort(np.sqrt(np.sum((x-x[i])**2,axis=1)))[r] for i in range(n)]
-  # can try to use argsprt instead of clipping 
   w = np.clip(dist(x,x) / h, 0.0, 1.0)
   w = (1 - w ** 3) ** 3
 
-  #Looping through all X-points
+  # loop through all x-points
   delta = np.ones(n)
   for iteration in range(iter):
     for i in range(n):
@@ -50,12 +50,14 @@ def lw_ag_md(x, y, xnew,f=2/3,iter=3, intercept=True):
       beta = linalg.solve(A, b)
       yest[i] = np.dot(x1[i],beta)
 
-    # robustifiction part, remove higher residuals by weighting them with 0
+    # robustifiction part: give weights of 0 to observations with the highest residuals to remove them
     residuals = y - yest
     s = np.median(np.abs(residuals))
     delta = np.clip(residuals / (6.0 * s), -1, 1)
     delta = (1 - delta ** 2) ** 2
 
+  # use interpolation to predict y-values for xnew
+  # best used on data with lower dimensions
   if x.shape[1]==1:
     f = interp1d(x.flatten(),yest,fill_value='extrapolate')
   else:
