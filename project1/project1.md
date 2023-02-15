@@ -244,4 +244,4 @@ The final graph is using the optimized LOWESS model on the noisy sin function.
 
 The full Python notebook is linked here: [Project 1 Python Notebook](https://colab.research.google.com/drive/1cpUCM7N4mryhDvETJjrGiI5MNH44wlwR#scrollTo=1HGeqENmxPgk) 
 
-[Back to Project Index]([README.md](https://sofia-huang.github.io/DATA441/)) 
+[Back to Project Index](https://sofia-huang.github.io/DATA441/)
