@@ -19,55 +19,69 @@ def lw_ag_md(x, y, xnew,f=2/3,iter=3, intercept=True):
 
   n = len(x)
   r = int(ceil(f * n))
-  # y estimates
   yest = np.zeros(n)
-
-  if len(y.shape)==1: 
-    # here we make column vectors
+  # checking data dimensionality
+  if len(y.shape)==1: # here we make column vectors
     y = y.reshape(-1,1)
 
   if len(x.shape)==1:
     x = x.reshape(-1,1)
-  
+  # appending augmented matrix x1 
   if intercept:
     x1 = np.column_stack([np.ones((len(x),1)),x])
   else:
     x1 = x
-
+  # compute the max bounds for the local neighborhoods
+  # closer points get higher weight
   h = [np.sort(np.sqrt(np.sum((x-x[i])**2,axis=1)))[r] for i in range(n)]
+
   w = np.clip(dist(x,x) / h, 0.0, 1.0)
   w = (1 - w ** 3) ** 3
 
-  # loop through all x-points
+  #Looping through all X-points
   delta = np.ones(n)
+  # robustifying part
   for iteration in range(iter):
     for i in range(n):
       W = np.diag(w[:,i])
+      # solve linear system
       b = np.transpose(x1).dot(W).dot(y)
       A = np.transpose(x1).dot(W).dot(x1)
-
-      A = A + 0.0001*np.eye(x1.shape[1])
+      ##
+      A = A + 0.0001*np.eye(x1.shape[1]) # if we want L2 regularization
       beta = linalg.solve(A, b)
+      #beta, res, rnk, s = linalg.lstsq(A, b)
       yest[i] = np.dot(x1[i],beta)
-
-    # robustifiction part: give weights of 0 to observations with the highest residuals to remove them
+    # clip/remove data that has large residuals
     residuals = y - yest
     s = np.median(np.abs(residuals))
     delta = np.clip(residuals / (6.0 * s), -1, 1)
     delta = (1 - delta ** 2) ** 2
-
-  # use interpolation to predict y-values for xnew
-  # best used on data with lower dimensions
+  # for 1-dimension, do interpolation for xnew
   if x.shape[1]==1:
     f = interp1d(x.flatten(),yest,fill_value='extrapolate')
+    output = f(xnew)
   else:
-    f = LinearNDInterpolator(x, yest)
-  output = f(xnew) # the output may have NaN's where the data points from xnew are outside the convex hull of X
+  # for multiple-dimensional data
+    output = np.zeros(len(xnew))
+    for i in range(len(xnew)):
+      ind = np.argsort(np.sqrt(np.sum((x-xnew[i])**2,axis=1)))[:r]
+      # extract first 3 principle components
+      pca = PCA(n_components=3)
+      x_pca = pca.fit_transform(x[ind])
+      # get convex hull in order to interpolate 
+      tri = Delaunay(x_pca,qhull_options='QJ')
+      f = LinearNDInterpolator(tri,y[ind])
+      output[i] = f(pca.transform(xnew[i].reshape(1,-1))) # the output may have NaN's where the data points from xnew are outside the convex hull of X
   if sum(np.isnan(output))>0:
+    # accomodates possible new data that falls out of scope of old data, cannot extrapolate, we just use the nearest observation from old data
     g = NearestNDInterpolator(x,y.ravel()) 
-    # output[np.isnan(output)] = g(X[np.isnan(output)])
     output[np.isnan(output)] = g(xnew[np.isnan(output)])
   return output
   ```
+  
+  This function takes in the x and y data, along with new x data, hyperparameter f, and the number of iterations. f is a fraction of the data that comprises the nearest neighbors of each observation. The number of iterations is for the robustification portion of the function which reweights the points and clips the points that have high residuals so that outliers do not affect the results. 
+  
+  The function is able to predict y's for the xnew parameter through interpolation. For multi-dimensional data we extract the first 3 principle components and use a convex hull to interpolate.
   
 [Back to Project Index](https://sofia-huang.github.io/DATA441/)
