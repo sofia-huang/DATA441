@@ -84,13 +84,13 @@ def lw_ag_md(x, y, xnew,f=2/3,iter=3, intercept=True):
   
   The function is able to predict y's for the xnew parameter through interpolation. For multi-dimensional data we extract the first 3 principle components and use a convex hull to interpolate.
   
-  Let's test the function on some real data using k-fold cross validations. *I tried to change the kernel function that was bing used to calculate the weights, however this did not change the results. 
+  Let's test the function on some real data using k-fold cross validations. *I tried to change the kernel function that was used to calculate the weights, however this did not change the results. 
   
 ```Python
 kf = KFold(n_splits=10,shuffle=True,random_state=123)
 mse_test_lw_ag_md = []
 fs = []
-f_range = np.linspace(0.01,0.9,num=10)
+f_range = f_range = [1/50, 1/20, 1/10, 1/5, 1/2]
 
 for f in f_range:
 
@@ -100,7 +100,7 @@ for f in f_range:
     ytrain = y_cars[idxtrain]
     ytest = y_cars[idxtest]    
 
-    yhat = lw_ag_md(xtrain,ytrain,xtest,f=1/20,iter=3,intercept=True)
+    yhat = lw_ag_md(xtrain,ytrain,xtest,f=f,iter=3,intercept=True)
     mse_test_lw_ag_md.append(mse(ytest,yhat))
     fs.append(f)
 idx = np.argmin(mse_test_lw_ag_md)
@@ -109,9 +109,45 @@ print('The optimal f is ' + str(fs[idx]) + '; and its corresponding MSE is ' + s
 
 ```
 Output:
-The validated MSE for Lowess is : 27.960574663538864
-The optimal f is 0.01; and its corresponding MSE is 14.913155243013415
-  
+
+The validated MSE for Lowess is : 28.167368454834886
+
+The optimal f is 0.5; and its corresponding MSE is 14.202761553214305
+
+For the cars.csv dataset, we can see that using a f of 1/2 will result in the best MSE.
+
+Then, I decided to optimize the number of robustifying iterations using k-fold cross validation.
+
+```Python
+kf = KFold(n_splits=10,shuffle=True,random_state=123)
+mse_test_lw_ag_md = []
+iters = []
+i_range = [2, 3, 4, 5, 6, 7]
+
+for i in i_range:
+
+  for idxtrain, idxtest in kf.split(x_cars):
+    xtrain = x_cars[idxtrain]
+    xtest = x_cars[idxtest]
+    ytrain = y_cars[idxtrain]
+    ytest = y_cars[idxtest]    
+
+    yhat = lw_ag_md(xtrain,ytrain,xtest,f=1/2,iter=i,intercept=True)
+    mse_test_lw_ag_md.append(mse(ytest,yhat))
+    iters.append(i)
+idx = np.argmin(mse_test_lw_ag_md)
+print('The validated MSE for Lowess is : '+str(np.mean(mse_test_lw_ag_md)))
+print('The optimal number of iterations is ' + str(iters[idx]) + '; and its corresponding MSE is ' + str(np.min(mse_test_lw_ag_md)))
+```
+Output:
+
+The validated MSE for Lowess is : 25.529407163652625
+
+The optimal number of iterations is 2; and its corresponding MSE is 14.202761553214305
+
+For the cars.csv dataset, we can see that using 2 iterations will result in the best MSE.
+
+
 Here is the same function but scikit-learn compliant.
 ```Python
 class Lowess_AG_MD:
