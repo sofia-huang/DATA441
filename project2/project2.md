@@ -84,6 +84,34 @@ def lw_ag_md(x, y, xnew,f=2/3,iter=3, intercept=True):
   
   The function is able to predict y's for the xnew parameter through interpolation. For multi-dimensional data we extract the first 3 principle components and use a convex hull to interpolate.
   
+  Let's test the function on some real data using k-fold cross validations. *I tried to change the kernel function that was bing used to calculate the weights, however this did not change the results. 
+  
+```Python
+kf = KFold(n_splits=10,shuffle=True,random_state=123)
+mse_test_lw_ag_md = []
+fs = []
+f_range = np.linspace(0.01,0.9,num=10)
+
+for f in f_range:
+
+  for idxtrain, idxtest in kf.split(x_cars):
+    xtrain = x_cars[idxtrain]
+    xtest = x_cars[idxtest]
+    ytrain = y_cars[idxtrain]
+    ytest = y_cars[idxtest]    
+
+    yhat = lw_ag_md(xtrain,ytrain,xtest,f=1/20,iter=3,intercept=True)
+    mse_test_lw_ag_md.append(mse(ytest,yhat))
+    fs.append(f)
+idx = np.argmin(mse_test_lw_ag_md)
+print('The validated MSE for Lowess is : '+str(np.mean(mse_test_lw_ag_md)))
+print('The optimal f is ' + str(fs[idx]) + '; and its corresponding MSE is ' + str(np.min(mse_test_lw_ag_md)))
+
+```
+Output:
+The validated MSE for Lowess is : 27.960574663538864
+The optimal f is 0.01; and its corresponding MSE is 14.913155243013415
+  
 Here is the same function but scikit-learn compliant.
 ```Python
 class Lowess_AG_MD:
