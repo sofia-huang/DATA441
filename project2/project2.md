@@ -84,4 +84,37 @@ def lw_ag_md(x, y, xnew,f=2/3,iter=3, intercept=True):
   
   The function is able to predict y's for the xnew parameter through interpolation. For multi-dimensional data we extract the first 3 principle components and use a convex hull to interpolate.
   
+Here is the same function but scikit-learn compliant.
+```Python
+class Lowess_AG_MD:
+    def __init__(self, f = 1/10, iter = 3,intercept=True):
+        self.f = f
+        self.iter = iter
+        self.intercept = intercept
+    
+    def fit(self, x, y):
+        f = self.f
+        iter = self.iter
+        self.xtrain_ = x
+        self.yhat_ = y
+
+    def predict(self, x_new):
+        check_is_fitted(self)
+        x = self.xtrain_
+        y = self.yhat_
+        f = self.f
+        iter = self.iter
+        intercept = self.intercept
+        return lw_ag_md(x, y, x_new, f, iter, intercept)
+
+    def get_params(self, deep=True):
+    # suppose this estimator has parameters "f", "iter" and "intercept"
+        return {"f": self.f, "iter": self.iter,"intercept":self.intercept}
+
+    def set_params(self, **parameters):
+        for parameter, value in parameters.items():
+            setattr(self, parameter, value)
+        return self
+```
+  
 [Back to Project Index](https://sofia-huang.github.io/DATA441/)
