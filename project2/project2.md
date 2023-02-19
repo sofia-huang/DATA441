@@ -147,6 +147,65 @@ The optimal number of iterations is 2; and its corresponding MSE is 14.202761553
 
 For the cars.csv dataset, we can see that using 2 iterations will result in the best MSE.
 
+Now, I will do the same process for the concrete.csv dataset.
+
+```Python
+kf = KFold(n_splits=10,shuffle=True,random_state=123)
+mse_test_lw_ag_md = []
+fs = []
+f_range = f_range = [1/50, 1/20, 1/10, 1/5, 1/2]
+
+for f in f_range:
+  for idxtrain, idxtest in kf.split(x_concrete):
+    xtrain = x_concrete[idxtrain]
+    xtest = x_concrete[idxtest]
+    ytrain = y_concrete[idxtrain]
+    ytest = y_concrete[idxtest]    
+
+    yhat = lw_ag_md(xtrain,ytrain,xtest,f=f,iter=3,intercept=True)
+    mse_test_lw_ag_md.append(mse(ytest,yhat))
+    print(f)
+    fs.append(f)
+idx = np.argmin(mse_test_lw_ag_md)
+print('The validated MSE for Lowess is : '+str(np.mean(mse_test_lw_ag_md)))
+print('The optimal f is ' + str(fs[idx]) + '; and its corresponding MSE is ' + str(np.min(mse_test_lw_ag_md))
+```
+Output:
+
+The validated MSE for Lowess is : 78.53741918852668
+
+The optimal f is 0.02; and its corresponding MSE is 42.952746612490856
+
+For the concrete.csv dataset, we can see that using a f of 1/50 will result in the best MSE, but not as good as the cars.csv dataset. Could be due to the dataset size being a lot larger.
+
+```Python
+kf = KFold(n_splits=10,shuffle=True,random_state=123)
+mse_test_lw_ag_md = []
+iters = []
+i_range = [2, 3, 4, 5, 6, 7]
+
+for i in i_range:
+
+  for idxtrain, idxtest in kf.split(x_concrete):
+    xtrain = x_concrete[idxtrain]
+    xtest = x_concrete[idxtest]
+    ytrain = y_concrete[idxtrain]
+    ytest = y_concrete[idxtest]      
+
+    yhat = lw_ag_md(xtrain,ytrain,xtest,f=1/50,iter=i,intercept=True)
+    mse_test_lw_ag_md.append(mse(ytest,yhat))
+    iters.append(i)
+idx = np.argmin(mse_test_lw_ag_md)
+print('The validated MSE for Lowess is : '+str(np.mean(mse_test_lw_ag_md)))
+print('The optimal number of iterations is ' + str(iters[idx]) + '; and its corresponding MSE is ' + str(np.min(mse_test_lw_ag_md)))
+```
+Output:
+
+The validated MSE for Lowess is : 64.00130725548516
+
+The optimal number of iterations is 2; and its corresponding MSE is 42.952746612490856
+
+
 
 Here is the same function but scikit-learn compliant.
 ```Python
