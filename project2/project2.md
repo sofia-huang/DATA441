@@ -271,7 +271,7 @@ Output
 - The Cross-validated Mean Squared Error for Locally Weighted Regression is : 22.97267737048883
 - The Cross-validated Mean Squared Error for Random Forest is : 17.251145917723566
 
-We can also perform a GridSearchCV for hyperparameter optimization.
+We can also perform a GridSearchCV for hyperparameter optimization. I only used the cars.csv dataset for this portion because the concrete.csv dataset was too computationally and time expensive due to its size.
 
 ```Python
 lwr_pipe = Pipeline([('zscores', StandardScaler()),
@@ -289,6 +289,17 @@ Output:
 
 - {'lwr__f': 0.07142857142857142, 'lwr__iter': 1}
 
-Based on these results, the optimal f value is 1/14 and the optimal number of iterations is only 1. 
+Based on these results, the optimal f value is 1/14 and the optimal number of iterations is only 1. We can check what the MSE is using the code below.
+
+```Python
+model = Lowess_AG_MD(f=1/14,iter=1,intercept=True)
+model.fit(xtrain,ytrain)
+yhat = model.predict(xtest)
+mse(ytest,yhat)
+```
+Output:
+- 24.500629196497787
+
+In this project I have explained how to modify A. Gramfort's LOWESS function to accomodate multidimensionality and train/test sets. As well as, perform k-fold cross validations and create a SciKitLearn-compliant version. 
   
 [Back to Project Index](https://sofia-huang.github.io/DATA441/)
