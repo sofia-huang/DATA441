@@ -100,7 +100,10 @@ for f in f_range:
     xtrain = x_cars[idxtrain]
     xtest = x_cars[idxtest]
     ytrain = y_cars[idxtrain]
-    ytest = y_cars[idxtest]    
+    ytest = y_cars[idxtest]  
+    
+    xtrain = scale.fit_transform(xtrain)
+    xtest = scale.transform(xtest)
 
     yhat = lw_ag_md(xtrain,ytrain,xtest,f=f,iter=3,intercept=True)
     mse_test_lw_ag_md.append(mse(ytest,yhat))
@@ -112,10 +115,10 @@ print('The optimal f is ' + str(fs[idx]) + '; and its corresponding MSE is ' + s
 ```
 Output:
 
-- The validated MSE for Lowess is : 25.695498919639203
-- The optimal f is 0.16666666666666666; and its corresponding MSE is 12.036115269609615
+- The validated MSE for Lowess is : 26.205867323649777
+- The optimal f is 0.3333333333333333; and its corresponding MSE is 12.135483907783751
 
-For the cars.csv dataset, we can see that using an f of 1/6 will result in the best MSE.
+For the cars.csv dataset, we can see that using an f of 1/3 will result in the best MSE.
 
 Then, I decided to optimize the number of robustifying iterations using k-fold cross validation.
 
@@ -131,7 +134,10 @@ for i in i_range:
     xtrain = x_cars[idxtrain]
     xtest = x_cars[idxtest]
     ytrain = y_cars[idxtrain]
-    ytest = y_cars[idxtest]    
+    ytest = y_cars[idxtest] 
+    
+    xtrain = scale.fit_transform(xtrain)
+    xtest = scale.transform(xtest)
 
     yhat = lw_ag_md(xtrain,ytrain,xtest,f=1/2,iter=i,intercept=True)
     mse_test_lw_ag_md.append(mse(ytest,yhat))
