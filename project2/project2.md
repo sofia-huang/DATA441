@@ -126,7 +126,7 @@ Then, I decided to optimize the number of robustifying iterations using k-fold c
 kf = KFold(n_splits=10,shuffle=True,random_state=123)
 mse_test_lw_ag_md = []
 iters = []
-i_range = [2, 3, 4, 5, 6, 7]
+i_range = [1, 2, 3, 4]
 
 for i in i_range:
 
@@ -139,7 +139,7 @@ for i in i_range:
     xtrain = scale.fit_transform(xtrain)
     xtest = scale.transform(xtest)
 
-    yhat = lw_ag_md(xtrain,ytrain,xtest,f=1/2,iter=i,intercept=True)
+    yhat = lw_ag_md(xtrain,ytrain,xtest,f=1/3,iter=i,intercept=True)
     mse_test_lw_ag_md.append(mse(ytest,yhat))
     iters.append(i)
 idx = np.argmin(mse_test_lw_ag_md)
@@ -167,6 +167,9 @@ for f in f_range:
     xtest = x_concrete[idxtest]
     ytrain = y_concrete[idxtrain]
     ytest = y_concrete[idxtest]    
+    
+    xtrain = scale.fit_transform(xtrain)
+    xtest = scale.transform(xtest)
 
     yhat = lw_ag_md(xtrain,ytrain,xtest,f=f,iter=3,intercept=True)
     mse_test_lw_ag_md.append(mse(ytest,yhat))
@@ -195,7 +198,10 @@ for i in i_range:
     xtrain = x_concrete[idxtrain]
     xtest = x_concrete[idxtest]
     ytrain = y_concrete[idxtrain]
-    ytest = y_concrete[idxtest]      
+    ytest = y_concrete[idxtest]  
+    
+    xtrain = scale.fit_transform(xtrain)
+    xtest = scale.transform(xtest)
 
     yhat = lw_ag_md(xtrain,ytrain,xtest,f=1/50,iter=i,intercept=True)
     mse_test_lw_ag_md.append(mse(ytest,yhat))
