@@ -84,13 +84,15 @@ def lw_ag_md(x, y, xnew,f=2/3,iter=3, intercept=True):
   
   The function is able to predict y's for the xnew parameter through interpolation. For multi-dimensional data we extract the first 3 principle components and use a convex hull to interpolate.
   
+##### K-Fold Cross Validations
+  
   Let's test the function on some real data using k-fold cross validations. *I tried to change the kernel function that was used to calculate the weights, however this did not change the results. 
   
 ```Python
 kf = KFold(n_splits=10,shuffle=True,random_state=123)
 mse_test_lw_ag_md = []
 fs = []
-f_range = f_range = [1/50, 1/20, 1/10, 1/5, 1/2]
+f_range = [1/i for i in range(3,15)]
 
 for f in f_range:
 
@@ -110,11 +112,10 @@ print('The optimal f is ' + str(fs[idx]) + '; and its corresponding MSE is ' + s
 ```
 Output:
 
-The validated MSE for Lowess is : 28.167368454834886
+- The validated MSE for Lowess is : 25.695498919639203
+- The optimal f is 0.16666666666666666; and its corresponding MSE is 12.036115269609615
 
-The optimal f is 0.5; and its corresponding MSE is 14.202761553214305
-
-For the cars.csv dataset, we can see that using a f of 1/2 will result in the best MSE.
+For the cars.csv dataset, we can see that using an f of 1/6 will result in the best MSE.
 
 Then, I decided to optimize the number of robustifying iterations using k-fold cross validation.
 
@@ -141,9 +142,8 @@ print('The optimal number of iterations is ' + str(iters[idx]) + '; and its corr
 ```
 Output:
 
-The validated MSE for Lowess is : 25.529407163652625
-
-The optimal number of iterations is 2; and its corresponding MSE is 14.202761553214305
+- The validated MSE for Lowess is : 25.529407163652625
+- The optimal number of iterations is 2; and its corresponding MSE is 14.202761553214305
 
 For the cars.csv dataset, we can see that using 2 iterations will result in the best MSE.
 
@@ -172,11 +172,10 @@ print('The optimal f is ' + str(fs[idx]) + '; and its corresponding MSE is ' + s
 ```
 Output:
 
-The validated MSE for Lowess is : 78.53741918852668
+- The validated MSE for Lowess is : 78.53741918852668
+- The optimal f is 0.02; and its corresponding MSE is 42.952746612490856
 
-The optimal f is 0.02; and its corresponding MSE is 42.952746612490856
-
-For the concrete.csv dataset, we can see that using a f of 1/50 will result in the best MSE, but not as good as the cars.csv dataset. Could be due to the dataset size being a lot larger.
+For the concrete.csv dataset, we can see that using an f of 1/50 will result in the best MSE, but not as good as the cars.csv dataset. Could be due to the dataset size being a lot larger.
 
 ```Python
 kf = KFold(n_splits=10,shuffle=True,random_state=123)
@@ -201,13 +200,12 @@ print('The optimal number of iterations is ' + str(iters[idx]) + '; and its corr
 ```
 Output:
 
-The validated MSE for Lowess is : 64.00130725548516
+- The validated MSE for Lowess is : 64.00130725548516
+- The optimal number of iterations is 2; and its corresponding MSE is 42.952746612490856
 
-The optimal number of iterations is 2; and its corresponding MSE is 42.952746612490856
+##### SciKitLearn-compliant version
 
-
-
-Here is the same function but scikit-learn compliant.
+Here is the same function but SciKitLearn-compliant.
 ```Python
 class Lowess_AG_MD:
     def __init__(self, f = 1/10, iter = 3,intercept=True):
@@ -231,7 +229,6 @@ class Lowess_AG_MD:
         return lw_ag_md(x, y, x_new, f, iter, intercept)
 
     def get_params(self, deep=True):
-    # suppose this estimator has parameters "f", "iter" and "intercept"
         return {"f": self.f, "iter": self.iter,"intercept":self.intercept}
 
     def set_params(self, **parameters):
@@ -239,5 +236,59 @@ class Lowess_AG_MD:
             setattr(self, parameter, value)
         return self
 ```
+As you can see, the SciKitLearn-compliant version just uses the lw_ag_md() function from earlier and is formatted as a class so we can use the .fit() and .predict() functions on a model object.
+
+I will now use the Lowess_AG_MD class and do some k-fold cross validations against a Random Forest Regressor.
+
+```Python
+mse_lwr = []
+mse_rf = []
+kf = KFold(n_splits=10,shuffle=True,random_state=1234)
+model_rf = RandomForestRegressor(n_estimators=200,max_depth=5)
+model_lw = Lowess_AG_MD(f=1/3,iter=3,intercept=True)
+
+for idxtrain, idxtest in kf.split(x_cars):
+  xtrain = x_cars[idxtrain]
+  ytrain = y_cars[idxtrain]
+  ytest = y_cars[idxtest]
+  xtest = x_cars[idxtest]
+  xtrain = scale.fit_transform(xtrain)
+  xtest = scale.transform(xtest)
+
+  model_lw.fit(xtrain,ytrain)
+  yhat_lw = model_lw.predict(xtest)
+  
+  model_rf.fit(xtrain,ytrain)
+  yhat_rf = model_rf.predict(xtest)
+
+  mse_lwr.append(mse(ytest,yhat_lw))
+  mse_rf.append(mse(ytest,yhat_rf))
+print('The Cross-validated Mean Squared Error for Locally Weighted Regression is : '+str(np.mean(mse_lwr)))
+print('The Cross-validated Mean Squared Error for Random Forest is : '+str(np.mean(mse_rf)))
+```
+Output
+
+- The Cross-validated Mean Squared Error for Locally Weighted Regression is : 22.97267737048883
+- The Cross-validated Mean Squared Error for Random Forest is : 17.251145917723566
+
+We can also perform a GridSearchCV for hyperparameter optimization.
+
+```Python
+lwr_pipe = Pipeline([('zscores', StandardScaler()),
+                     ('lwr', Lowess_AG_MD())])
+params = [{'lwr__f': [1/i for i in range(3,15)],
+         'lwr__iter': [1,2,3,4]}]
+gs_lowess = GridSearchCV(lwr_pipe,
+                      param_grid=params,
+                      scoring='neg_mean_squared_error',
+                      cv=5)
+gs_lowess.fit(x_cars, y_cars)
+gs_lowess.best_params_
+```
+Output:
+
+- {'lwr__f': 0.07142857142857142, 'lwr__iter': 1}
+
+Based on these results, the optimal f value is 1/14 and the optimal number of iterations is only 1. 
   
 [Back to Project Index](https://sofia-huang.github.io/DATA441/)
