@@ -84,7 +84,7 @@ def lw_ag_md(x, y, xnew,f=2/3,iter=3, intercept=True):
   
   The function is able to predict y's for the xnew parameter through interpolation. For multi-dimensional data we extract the first 3 principle components and use a convex hull to interpolate.
   
-##### K-Fold Cross Validations
+#### K-Fold Cross Validations
   
   Let's test the function on some real data using k-fold cross validations. *I tried to change the kernel function that was used to calculate the weights, however this did not change the results. 
   
@@ -203,7 +203,7 @@ Output:
 - The validated MSE for Lowess is : 64.00130725548516
 - The optimal number of iterations is 2; and its corresponding MSE is 42.952746612490856
 
-##### SciKitLearn-compliant version
+#### SciKitLearn-compliant version
 
 Here is the same function but SciKitLearn-compliant.
 ```Python
