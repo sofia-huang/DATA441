@@ -18,6 +18,7 @@ def boosted_lwr(x, y, xnew, model1, model2, kernel, f=1/3,iter=2,intercept=True)
   output = model1.predict(xnew) + model2.predict(xnew)
   return output 
 ```
+#### cars.csv
 
 First, I tested it on the cars.csv dataset. I split the data into training and testing sets and scaled them. Then, I used the optimal hyperparameter values I found in the previous project for the f value and number of iterations. I tested the function using various kernels. Below is an example of the code I used to get the results. I just changed the kernel parameter when creating the 2 regressor models and kept the other hyperparameters the same.
 
@@ -72,5 +73,100 @@ print('The Cross-validated Mean Squared Error for Random Forest is : '+str(np.me
 | The Cross-validated Mean Squared Error for Locally Weighted Regression is : 17.5301456603268    | 
 | The Cross-validated Mean Squared Error for Random Forest is : 17.204446835237757    | 
 
+The boosted Lowess regression model performed almost as well as the Random Forest model for the cars.csv dataset.
+
+#### housing.csv
+
+Next, I repeated the same process for the housing.csv dataset. I split the data into training and testing sets and scaled them. Then, found the best performing kernel based on mean squared error. Since I had not used the housing dataset in the previous project where I found the optimal f and iter hyperparameters, I manually tested to see what values produced the best results and found them pretty quickly. I ended up using an f-value of 1/60 and 2 iterations.
+
+Here are the results.
+
+| Kernel      | MSE |
+| ----------- | ----------- |
+| Tricubic    | 17.91412298055437 |
+| Gaussian    | 42.106965749700066 |
+| Epanechnikov| 19.60280712041183 |
+| Quartic     | 18.198843595500563 |
+
+Interestingly, the Gaussian kernel produced a much worse mean squared error than the rest of the kernels. The best was the Tricubic kernel.
+
+Again, I preformed a K-Fold cross validation on the housing.csv dataset and used the Tricubic kernel, as well as, the optimal f and iter hyperparameters. 
+
+```Python
+mse_lwr = []
+mse_rf = []
+kf = KFold(n_splits=10,shuffle=True,random_state=1234)
+model_rf = RandomForestRegressor(n_estimators=200,max_depth=5)
+
+for idxtrain, idxtest in kf.split(x_hs):
+  xtrain = x_hs[idxtrain]
+  ytrain = y_hs[idxtrain]
+  ytest = y_hs[idxtest]
+  xtest = x_hs[idxtest]
+  xtrain = scale.fit_transform(xtrain)
+  xtest = scale.transform(xtest)
+
+  model1 = Lowess_AG_MD(kernel='Tricubic',f=1/60,iter=2,intercept=True)
+  model2 = Lowess_AG_MD(kernel='Tricubic',f=1/60,iter=2,intercept=True)
+  yhat_lw = boosted_lwr(xtrain,ytrain,xtest,model1,model2,kernel='Tricubic',f=1/60,iter=2,intercept=True)
+  
+  model_rf.fit(xtrain,ytrain)
+  yhat_rf = model_rf.predict(xtest)
+
+  mse_lwr.append(mse(ytest,yhat_lw))
+  mse_rf.append(mse(ytest,yhat_rf))
+print('The Cross-validated Mean Squared Error for Locally Weighted Regression is : '+str(np.mean(mse_lwr)))
+print('The Cross-validated Mean Squared Error for Random Forest is : '+str(np.mean(mse_rf)))
+```
+
+| Output      | 
+| ----------- |
+| The Cross-validated Mean Squared Error for Locally Weighted Regression is : 17.12735864190333    | 
+| The Cross-validated Mean Squared Error for Random Forest is : 14.950868358416638   | 
+
+For the housing dataset, the boosted Lowess regression model did not perform quite as well as the Random Forest model. However, the difference between the 2 models' results is not large.
+
+#### concrete.csv
+
+Lastly, I did the same process for the concrete.csv dataset. For this data, I scaled both the features and the target variables since the variation between the values was high and making the resulting mean squared errors very large. 
+
+| Kernel      | MSE |
+| ----------- | ----------- |
+| Tricubic    | 0.3017316701837452 |
+| Gaussian    | 0.4438413389361671 |
+| Epanechnikov| 0.30044029773915715 |
+| Quartic     | 0.29969159231812365 |
+
+```Python
+mse_lwr = []
+mse_rf = []
+kf = KFold(n_splits=10,shuffle=True,random_state=1234)
+model_rf = RandomForestRegressor(n_estimators=200,max_depth=5)
+
+for idxtrain, idxtest in kf.split(x_cc):
+  xtrain = x_cc[idxtrain]
+  ytrain = y_cc[idxtrain]
+  ytest = y_cc[idxtest]
+  xtest = x_cc[idxtest]
+  xtrain = scale.fit_transform(xtrain)
+  xtest = scale.transform(xtest)
+
+  model1 = Lowess_AG_MD(kernel='Quartic',f=25/len(xtrain),iter=1,intercept=True)
+  model2 = Lowess_AG_MD(kernel='Quartic',f=25/len(xtrain),iter=1,intercept=True)
+  yhat_lw = boosted_lwr(xtrain,ytrain,xtest,model1,model2,kernel='Quartic',f=25/len(xtrain),iter=1,intercept=True)
+  
+  model_rf.fit(xtrain,ytrain)
+  yhat_rf = model_rf.predict(xtest)
+
+  mse_lwr.append(mse(ytest,yhat_lw))
+  mse_rf.append(mse(ytest,yhat_rf))
+print('The Cross-validated Mean Squared Error for Locally Weighted Regression is : '+str(np.mean(mse_lwr)))
+print('The Cross-validated Mean Squared Error for Random Forest is : '+str(np.mean(mse_rf)))
+```
+
+| Output      | 
+| ----------- |
+| The Cross-validated Mean Squared Error for Locally Weighted Regression is : 0.24557337186739284 | 
+| The Cross-validated Mean Squared Error for Random Forest is : 0.16350294426378792 | 
 
 [Back to Project Index](https://sofia-huang.github.io/DATA441/)
