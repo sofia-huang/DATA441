@@ -128,7 +128,7 @@ For the housing dataset, the boosted Lowess regression model did not perform qui
 
 #### concrete.csv
 
-Lastly, I did the same process for the concrete.csv dataset. For this data, I scaled both the features and the target variables since the variation between the values was high and making the resulting mean squared errors very large. 
+Lastly, I did the same process for the concrete.csv dataset. For this data, I scaled both the features and the target variables since the variation between the different features' values was high and making the resulting mean squared errors very large. Below are the results for the boosted Lowess regression function using different kernels. The best performing kernel was Quartic.
 
 | Kernel      | MSE |
 | ----------- | ----------- |
@@ -136,6 +136,8 @@ Lastly, I did the same process for the concrete.csv dataset. For this data, I sc
 | Gaussian    | 0.4438413389361671 |
 | Epanechnikov| 0.30044029773915715 |
 | Quartic     | 0.29969159231812365 |
+
+Then, I used the Quartic kernel and the optimal hyperparameters found in the previous project to do a k-fold cross validation and compared the results with a Random Forest regression model.
 
 ```Python
 mse_lwr = []
@@ -168,5 +170,7 @@ print('The Cross-validated Mean Squared Error for Random Forest is : '+str(np.me
 | ----------- |
 | The Cross-validated Mean Squared Error for Locally Weighted Regression is : 0.24557337186739284 | 
 | The Cross-validated Mean Squared Error for Random Forest is : 0.16350294426378792 | 
+
+This dataset had the biggest difference in mean squared errors between the boosted Lowess regression and the Random Forest model. For all 3 datasets, the Random Forest model produced the best results so perhaps there could be more work to do in optimizing the hyperparameters for the boosted Lowess model.
 
 [Back to Project Index](https://sofia-huang.github.io/DATA441/)
