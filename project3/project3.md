@@ -173,4 +173,6 @@ print('The Cross-validated Mean Squared Error for Random Forest is : '+str(np.me
 
 This dataset had the biggest difference in mean squared errors between the boosted Lowess regression and the Random Forest model. For all 3 datasets, the Random Forest model produced the best results so perhaps there could be more work to do in optimizing the hyperparameters for the boosted Lowess model.
 
+The full Python notebook is linked here: [Project 3 Python Notebook](https://colab.research.google.com/drive/1E8XM0sj-mrrp9jlvJiPaL3kkTgrxz1kr#scrollTo=fc_2seba9hG8)
+
 [Back to Project Index](https://sofia-huang.github.io/DATA441/)
