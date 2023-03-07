@@ -90,7 +90,7 @@ Here are the results.
 
 Interestingly, the Gaussian kernel produced a much worse mean squared error than the rest of the kernels. The best was the Tricubic kernel.
 
-Again, I preformed a K-Fold cross validation on the housing.csv dataset and used the Tricubic kernel, as well as, the optimal f and iter hyperparameters. 
+Again, I performed a K-Fold cross validation on the housing.csv dataset and used the Tricubic kernel, as well as, the optimal f and iter hyperparameters. 
 
 ```Python
 mse_lwr = []
