@@ -138,7 +138,7 @@ print('The Cross-validated Mean Squared Error for Random Forest is : '+str(np.me
 | The Cross-validated Mean Squared Error for Locally Weighted Regression is : 12.5407953777719 | 
 | The Cross-validated Mean Squared Error for Random Forest is : 14.939881512619337 | 
 
-For the housing dataset, the boosted Lowess regression model did not perform quite as well as the Random Forest model. However, the difference between the 2 models' results is not large.
+For the housing dataset, the boosted Lowess regression model performed better than the Random Forest model, yet again. 
 
 #### concrete.csv
 
