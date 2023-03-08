@@ -11,7 +11,7 @@ Gradient Boosting is an algorithm where each predictor corrects the previous mod
 Here is the boosted Lowess regression function I used. It takes in user defined regressors and predicts "xnew" using Gradient Boosting.
 
 ```Python
-def boosted_lwr(x, y, xnew, model1, model2, kernel, f=1/3,iter=2,intercept=True):
+def boosted_lwr(x, y, xnew, model1, model2, f=1/3,iter=2,intercept=True):
   model1.fit(x,y)
   residuals1 = y - model1.predict(x)
   model2.fit(x,residuals1)
@@ -23,21 +23,21 @@ def boosted_lwr(x, y, xnew, model1, model2, kernel, f=1/3,iter=2,intercept=True)
 First, I tested it on the cars.csv dataset. I split the data into training and testing sets and scaled them. Then, I used the optimal hyperparameter values I found in the previous project for the f value and number of iterations. I tested the function using various kernels. Below is an example of the code I used to get the results. I just changed the kernel parameter when creating the 2 regressor models and kept the other hyperparameters the same.
 
 ```Python
-model1 = Lowess_AG_MD(kernel='Tricubic',f=1/3,iter=2,intercept=True)
-model2 = Lowess_AG_MD(kernel='Tricubic',f=1/3,iter=2,intercept=True)
-yhat = boosted_lwr(xtrain,ytrain,xtest,model1,model2,kernel='Tricubic',f=1/3,iter=1,intercept=True)
+model1 = Lowess_AG_MD(kernel=Tricubic,f=1/3,iter=2,intercept=True)
+model2 = Lowess_AG_MD(kernel=Tricubic,f=1/3,iter=2,intercept=True)
+yhat = boosted_lwr(xtrain,ytrain,xtest,model1,model2,f=1/3,iter=2,intercept=True)
 mse(ytest,yhat)
 ```
 Here are the results.
 
 | Kernel      | MSE |
 | ----------- | ----------- |
-| Tricubic    | 17.843509217584472 |
-| Gaussian    | 17.967290079505435 |
-| Epanechnikov| 18.104543915058876 |
-| Quartic     | 17.83746086303032 |
+| Tricubic    | 20.56791672624454 |
+| Gaussian    | 19.273326190314418 |
+| Epanechnikov| 19.258883776905023 |
+| Quartic     | 20.050242259086918 |
 
-The mean squared errors are all pretty close but the best performing kernel was Quartic.
+The mean squared errors are all pretty close but the best performing kernel was Epanechnikov.
 
 Then, I used K-Fold Cross Validation to compare the boosted Lowess regressor with a Random Forest Regressor. I used the best performing kernel and the optimal f value and iteration number for the boosted Lowess regressor. Below is the code I used.
 
@@ -55,9 +55,9 @@ for idxtrain, idxtest in kf.split(x_cr):
   xtrain = scale.fit_transform(xtrain)
   xtest = scale.transform(xtest)
 
-  model1 = Lowess_AG_MD(kernel='Quartic',f=1/3,iter=2,intercept=True)
-  model2 = Lowess_AG_MD(kernel='Quartic',f=1/3,iter=2,intercept=True)
-  yhat_lw = boosted_lwr(xtrain,ytrain,xtest,model1,model2,kernel='Quartic',f=1/3,iter=2,intercept=True)
+  model1 = Lowess_AG_MD(kernel=Epanechnikov,f=1/3,iter=2,intercept=True)
+  model2 = Lowess_AG_MD(kernel=Epanechnikov,f=1/3,iter=2,intercept=True)
+  yhat_lw = boosted_lwr(xtrain,ytrain,xtest,model1,model2,f=1/3,iter=2,intercept=True)
   
   model_rf.fit(xtrain,ytrain)
   yhat_rf = model_rf.predict(xtest)
@@ -70,27 +70,41 @@ print('The Cross-validated Mean Squared Error for Random Forest is : '+str(np.me
 
 | Output      | 
 | ----------- |
-| The Cross-validated Mean Squared Error for Locally Weighted Regression is : 17.5301456603268    | 
-| The Cross-validated Mean Squared Error for Random Forest is : 17.204446835237757    | 
+| The Cross-validated Mean Squared Error for Locally Weighted Regression is : 16.74565037038816 | 
+| The Cross-validated Mean Squared Error for Random Forest is : 17.07145834751521 | 
 
-The boosted Lowess regression model performed almost as well as the Random Forest model for the cars.csv dataset.
+The boosted Lowess regression model performed better than the Random Forest model for the cars.csv dataset.
 
 #### housing.csv
 
-Next, I repeated the same process for the housing.csv dataset. I split the data into training and testing sets and scaled them. Then, found the best performing kernel based on mean squared error. Since I had not used the housing dataset in the previous project where I found the optimal f and iter hyperparameters, I manually tested to see what values produced the best results and found them pretty quickly. I ended up using an f-value of 1/60 and 2 iterations.
+Next, I repeated the same process for the housing.csv dataset. I split the data into training and testing sets and scaled them. Then, found the best performing kernel based on mean squared error. Since I had not used the housing dataset in the previous project where I found the optimal f and iter hyperparameters, I used the GridSearchCV method to find the optimal values. I ended up using an f-value of 1/3 and 1 iteration.
+
+```Python
+lwr_pipe = Pipeline([('zscores', StandardScaler()),
+                     ('lwr', Lowess_AG_MD())])
+params = [{'lwr__f': [1/i for i in [3, 5, 10, 20, 25, 30, 40, 50, 60]],
+         'lwr__iter': [1,2,3]}]
+         
+gs_lowess = GridSearchCV(lwr_pipe,
+                      param_grid=params,
+                      scoring='neg_mean_squared_error',
+                      cv=5)
+gs_lowess.fit(x_hs, y_hs)
+gs_lowess.best_params_
+```
 
 Here are the results.
 
 | Kernel      | MSE |
 | ----------- | ----------- |
-| Tricubic    | 17.91412298055437 |
-| Gaussian    | 42.106965749700066 |
-| Epanechnikov| 19.60280712041183 |
-| Quartic     | 18.198843595500563 |
+| Tricubic    | 22.545513269180745 |
+| Gaussian    | 18.98995559886556 |
+| Epanechnikov| 21.972367856248418 |
+| Quartic     | 22.225757831072325 |
 
-Interestingly, the Gaussian kernel produced a much worse mean squared error than the rest of the kernels. The best was the Tricubic kernel.
+The best performing kernel was the Gaussian kernel.
 
-Again, I performed a K-Fold cross validation on the housing.csv dataset and used the Tricubic kernel, as well as, the optimal f and iter hyperparameters. 
+Again, I performed a K-Fold cross validation on the housing.csv dataset and used the Gaussian kernel, as well as, the optimal f and iter hyperparameters. 
 
 ```Python
 mse_lwr = []
@@ -106,9 +120,9 @@ for idxtrain, idxtest in kf.split(x_hs):
   xtrain = scale.fit_transform(xtrain)
   xtest = scale.transform(xtest)
 
-  model1 = Lowess_AG_MD(kernel='Tricubic',f=1/60,iter=2,intercept=True)
-  model2 = Lowess_AG_MD(kernel='Tricubic',f=1/60,iter=2,intercept=True)
-  yhat_lw = boosted_lwr(xtrain,ytrain,xtest,model1,model2,kernel='Tricubic',f=1/60,iter=2,intercept=True)
+  model1 = Lowess_AG_MD(kernel=Gaussian,f=1/3,iter=1,intercept=True)
+  model2 = Lowess_AG_MD(kernel=Gaussian,f=1/3,iter=1,intercept=True)
+  yhat_lw = boosted_lwr(xtrain,ytrain,xtest,model1,model2,f=1/3,iter=1,intercept=True)
   
   model_rf.fit(xtrain,ytrain)
   yhat_rf = model_rf.predict(xtest)
@@ -121,23 +135,23 @@ print('The Cross-validated Mean Squared Error for Random Forest is : '+str(np.me
 
 | Output      | 
 | ----------- |
-| The Cross-validated Mean Squared Error for Locally Weighted Regression is : 17.12735864190333    | 
-| The Cross-validated Mean Squared Error for Random Forest is : 14.950868358416638   | 
+| The Cross-validated Mean Squared Error for Locally Weighted Regression is : 12.5407953777719 | 
+| The Cross-validated Mean Squared Error for Random Forest is : 14.939881512619337 | 
 
 For the housing dataset, the boosted Lowess regression model did not perform quite as well as the Random Forest model. However, the difference between the 2 models' results is not large.
 
 #### concrete.csv
 
-Lastly, I did the same process for the concrete.csv dataset. For this data, I scaled both the features and the target variables since the variation between the different features' values was high and making the resulting mean squared errors very large. Below are the results for the boosted Lowess regression function using different kernels. The best performing kernel was Quartic.
+Lastly, I did the same process for the concrete.csv dataset. Below are the results for the boosted Lowess regression function using different kernels and the optimal hyperparameters found in the previous project. The best performing kernel was Gaussian.
 
 | Kernel      | MSE |
 | ----------- | ----------- |
-| Tricubic    | 0.3017316701837452 |
-| Gaussian    | 0.4438413389361671 |
-| Epanechnikov| 0.30044029773915715 |
-| Quartic     | 0.29969159231812365 |
+| Tricubic    | 82.99646217178436 |
+| Gaussian    | 76.70472625647679 |
+| Epanechnikov| 81.94149152387605 |
+| Quartic     | 82.7984533480926 |
 
-Then, I used the Quartic kernel and the optimal hyperparameters found in the previous project to do a k-fold cross validation and compared the results with a Random Forest regression model.
+Then, I used the Gaussian kernel and the optimal hyperparameters to do a k-fold cross validation and compared the results with a Random Forest regression model.
 
 ```Python
 mse_lwr = []
@@ -153,9 +167,9 @@ for idxtrain, idxtest in kf.split(x_cc):
   xtrain = scale.fit_transform(xtrain)
   xtest = scale.transform(xtest)
 
-  model1 = Lowess_AG_MD(kernel='Quartic',f=25/len(xtrain),iter=1,intercept=True)
-  model2 = Lowess_AG_MD(kernel='Quartic',f=25/len(xtrain),iter=1,intercept=True)
-  yhat_lw = boosted_lwr(xtrain,ytrain,xtest,model1,model2,kernel='Quartic',f=25/len(xtrain),iter=1,intercept=True)
+  model1 = Lowess_AG_MD(kernel=Gaussian,f=25/len(xtrain),iter=1,intercept=True)
+  model2 = Lowess_AG_MD(kernel=Gaussian,f=25/len(xtrain),iter=1,intercept=True)
+  yhat_lw = boosted_lwr(xtrain,ytrain,xtest,model1,model2,f=25/len(xtrain),iter=1,intercept=True)
   
   model_rf.fit(xtrain,ytrain)
   yhat_rf = model_rf.predict(xtest)
@@ -168,10 +182,10 @@ print('The Cross-validated Mean Squared Error for Random Forest is : '+str(np.me
 
 | Output      | 
 | ----------- |
-| The Cross-validated Mean Squared Error for Locally Weighted Regression is : 0.24557337186739284 | 
-| The Cross-validated Mean Squared Error for Random Forest is : 0.16350294426378792 | 
+| The Cross-validated Mean Squared Error for Locally Weighted Regression is : 67.13158282403913 | 
+| The Cross-validated Mean Squared Error for Random Forest is : 45.792357518954006 | 
 
-This dataset had the biggest difference in mean squared errors between the boosted Lowess regression and the Random Forest model. For all 3 datasets, the Random Forest model produced the best results so perhaps there could be more work to do in optimizing the hyperparameters for the boosted Lowess model.
+This dataset had the biggest difference in mean squared errors between the boosted Lowess regression and the Random Forest model. Compared to the other two datastes, the concrete.csv dataset took the longest to run and performed worse than Random Forest. 
 
 The full Python notebook is linked here: [Project 3 Python Notebook](https://colab.research.google.com/drive/1E8XM0sj-mrrp9jlvJiPaL3kkTgrxz1kr#scrollTo=fc_2seba9hG8)
 
