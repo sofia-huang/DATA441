@@ -44,7 +44,7 @@ I performed K-fold cross validations for both models using the concrete.csv data
 
 ```Python
 kf = KFold(n_splits=10,shuffle=True,random_state=1234)
-mse_gam = []
+rmse_gam = []
 model = LinearGAM(n_splines=6).gridsearch(x_train, y_train)
 
 for idxtrain, idxtest in kf.split(x_cc):
@@ -57,15 +57,15 @@ for idxtrain, idxtest in kf.split(x_cc):
   model.fit(x_train,y_train)
   yhat = model.predict(x_test)
 
-  mse_gam.append(mse(y_test,yhat))
-  print(mse(y_test,yhat))
+  rmse_gam.append(np.sqrt(mse(y_test,yhat)))
+  print(np.sqrt(mse(y_test,yhat)))
 
-print('The Cross-validated Mean Squared Error for GAM is : '+str(np.mean(mse_gam)))
+print('The Cross-validated Root Mean Squared Error for GAM is : '+str(np.mean(rmse_gam)))
 ```
-**The Cross-validated Mean Squared Error for GAM is : 37.95743639775138**
+**The Cross-validated Root Mean Squared Error for GAM is : 6.141161965377486**
 ```Python
 kf = KFold(n_splits=10,shuffle=True,random_state=1234)
-mse_nw = []
+rmse_nw = []
 model = GridSearchCV(NadarayaWatson(), cv=10, param_grid=param_grid)
 
 for idxtrain, idxtest in kf.split(x_cc):
@@ -78,9 +78,11 @@ for idxtrain, idxtest in kf.split(x_cc):
   model.fit(x_train,y_train)
   yhat = model.predict(x_test)
 
-  mse_nw.append(mse(y_test,yhat))
-  print(mse(y_test,yhat))
+  rmse_nw.append(np.sqrt(mse(y_test,yhat)))
+  print(np.sqrt(mse(y_test,yhat)))
 
-print('The Cross-validated Mean Squared Error for Nadaraya-Watson is : '+str(np.mean(mse_nw)))
+print('The Cross-validated Root Mean Squared Error for Nadaraya-Watson is : '+str(np.mean(rmse_nw)))
 ```
-**The Cross-validated Mean Squared Error for Nadaraya-Watson is : 63.476314340632015**
+**The Cross-validated Root Mean Squared Error for Nadaraya-Watson is : 7.923816050200259**
+
+Again, the GAM outperformed the NW regressor by a narrow margin. The difference between the root mean squared errors is less than 2. Both performed well and the results are satisfactory.
