@@ -24,7 +24,7 @@ The mean squared error using GAM on the noisy cosine function data was **0.03118
 
 I plotted the GAM's predictions against the true function and the result is below.
 
-<img src="project4plots/GAM1.png" width="600" height="400" /> 
+<img src="project4plots/gam1.png" width="750" height="400" /> 
 
 Using the same noisy cosine function input data and training and testing sets, I fit a Nadyara-Watson regressor and the MSE was **0.0609723802457237.** The code I used is below.
 ```Python
@@ -35,6 +35,6 @@ y_gs = nw_gs.predict(xtest)
 mse(ytest,y_gs)
 ```
 Then, I plotted the predictions with the true function and here is the result. 
-<img src="project4plots/download.png" width="600" height="400" /> 
+<img src="project4plots/download.png" width="750" height="400" /> 
 
 The Generalized Additive Model performed better than the Nadaraya-Watson regressor when using the same data. However, the difference in MSE is less than 0.02 and both were low and performed well.
