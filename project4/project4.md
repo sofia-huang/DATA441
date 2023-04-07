@@ -37,4 +37,4 @@ mse(ytest,y_gs)
 Then, I plotted the predictions with the true function and here is the result. 
 <img src="project4plots/download.png" width="700" height="400" /> 
 
-The Generalized Additive Model performed better than the Nadaraya-Watson regressor when using the same data. However, the difference in MSE is less than 0.02 and both were low and performed well.
+The Generalized Additive Model slightly outperformed the Nadaraya-Watson regressor when using the same data. However, the difference in MSE is less than 0.02. Both models had low MSEs and as seen in the plots, were able to predict the noisy cosine function well.
