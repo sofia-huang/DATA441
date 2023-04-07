@@ -38,3 +38,49 @@ Then, I plotted the predictions with the true function and here is the result.
 <img src="project4plots/download.png" width="700" height="400" /> 
 
 The Generalized Additive Model slightly outperformed the Nadaraya-Watson regressor when using the same data. However, the difference in MSE is less than 0.02. Both models had low MSEs and as seen in the plots, were able to predict the noisy cosine function well.
+
+## K-Fold Cross Validations on the concrete.csv dataset
+I performed K-fold cross validations for both models using the concrete.csv dataset. 
+
+```Python
+kf = KFold(n_splits=10,shuffle=True,random_state=1234)
+mse_gam = []
+model = LinearGAM(n_splines=6).gridsearch(x_train, y_train)
+
+for idxtrain, idxtest in kf.split(x_cc):
+
+  x_train = x_cc[idxtrain]
+  y_train = y_cc[idxtrain]
+  y_test = y_cc[idxtest]
+  x_test = x_cc[idxtest]
+
+  model.fit(x_train,y_train)
+  yhat = model.predict(x_test)
+
+  mse_gam.append(mse(y_test,yhat))
+  print(mse(y_test,yhat))
+
+print('The Cross-validated Mean Squared Error for GAM is : '+str(np.mean(mse_gam)))
+```
+**The Cross-validated Mean Squared Error for GAM is : 37.95743639775138**
+```Python
+kf = KFold(n_splits=10,shuffle=True,random_state=1234)
+mse_nw = []
+model = GridSearchCV(NadarayaWatson(), cv=10, param_grid=param_grid)
+
+for idxtrain, idxtest in kf.split(x_cc):
+
+  x_train = x_cc[idxtrain]
+  y_train = y_cc[idxtrain]
+  y_test = y_cc[idxtest]
+  x_test = x_cc[idxtest]
+
+  model.fit(x_train,y_train)
+  yhat = model.predict(x_test)
+
+  mse_nw.append(mse(y_test,yhat))
+  print(mse(y_test,yhat))
+
+print('The Cross-validated Mean Squared Error for Nadaraya-Watson is : '+str(np.mean(mse_nw)))
+```
+**The Cross-validated Mean Squared Error for Nadaraya-Watson is : 63.476314340632015**
