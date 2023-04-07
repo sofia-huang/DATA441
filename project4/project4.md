@@ -34,4 +34,7 @@ nw_gs.fit(xtrain, ytrain)
 y_gs = nw_gs.predict(xtest)
 mse(ytest,y_gs)
 ```
+Then, I plotted the predictions with the true function and here is the result. 
+<img src="project4plots/download.png" width="600" height="400" /> 
+
 The Generalized Additive Model performed better than the Nadaraya-Watson regressor when using the same data. However, the difference in MSE is less than 0.02 and both were low and performed well.
