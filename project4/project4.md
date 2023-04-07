@@ -86,3 +86,9 @@ print('The Cross-validated Root Mean Squared Error for Nadaraya-Watson is : '+st
 **The Cross-validated Root Mean Squared Error for Nadaraya-Watson is : 7.923816050200259**
 
 Again, the GAM outperformed the NW regressor by a narrow margin. The difference between the root mean squared errors is less than 2. Both performed well and the results are satisfactory.
+
+
+The full Python notebook is linked here: [Project 4 Python Notebook]
+(https://colab.research.google.com/drive/1ebOupXyfsGmEniptGgDYWkgbXsjIA4wj#scrollTo=3uYzP-09me9L)
+
+[Back to Project Index](https://sofia-huang.github.io/DATA441/)
