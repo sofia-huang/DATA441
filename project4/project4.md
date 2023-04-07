@@ -24,3 +24,4 @@ The mean squared error using GAM on the noisy cosine function data was **0.04346
 
 I plotted the GAM's predictions against the true function and the result is below.
 
+<img src="project4graphs/GAM1.png" width="1200" height="300" /> 
