@@ -20,7 +20,7 @@ gam = LinearGAM(n_splines=25).gridsearch(xtrain, ytrain)
 yhat = gam.predict(xtest)
 mse(ytest,yhat)
 ```
-The mean squared error using GAM on the noisy cosine function data was **0.04346660296522676.**
+The mean squared error using GAM on the noisy cosine function data was **0.031180041893866403.**
 
 I plotted the GAM's predictions against the true function and the result is below.
 
