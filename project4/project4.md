@@ -2,6 +2,12 @@
 # Generalized Additive Model vs Nadaraya-Watson regressor
 #### Goal: Generate 1-D (input) data and simulate a noised output of a rapidly oscillating function on the interval [0,20]; you will fit both regressors on a train set and measure their error on a test set. Show a plot comparing the two reconstructions of the gound truth function. Also, you will compare the 10-fold cross validated root mean square error of the two regressors on the "concrete.csv" data set.
 
+## Introduction
+Generalized Additive Models, or GAMs, are an extension of Generalized Linear Models (GLM), where the beta coefficients of the GLM are replaced with a function, f, typically a smoothing spline. GAM is an additive modeling technique that where the effect of the predictive variables on the target variable is captured through smooth functions which can do not have to be linear like GLM. Advantages of using GAM include interpretability, flexibility, and regularization. Due to its additive nature, the predictors do not depend on each other, meaning no correlated terms, interpreting the effects of an individual predictors on the target is easy to understand.
+
+Nadaraya-Watson Regressor is a type of kernel regression. It learns a non-linear function by using a continuous kernel-weighted-average of the data. The model does not assume the underlying distribution of the data and is nonparametric. 
+
+## Comparing the Models
 
 First, I created the 1-D data to simulate a noisy output of a rapidly oscillating function. I also created train and test sets from the function.
 ```Python
