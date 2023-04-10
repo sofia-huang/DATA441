@@ -45,6 +45,9 @@ Then, I plotted the predictions with the true function and here is the result.
 
 The Generalized Additive Model slightly outperformed the Nadaraya-Watson regressor when using the same data. However, the difference in MSE is less than 0.02. Both models had low MSEs and as seen in the plots, were able to predict the noisy cosine function well.
 
+I also plotted both models within the same plot, comparing them to the true function. As you can see, the differences between the two models and the true function is very slight and for most of the plot the lines are overlapped.
+<img src="project4plots/bothmodels.png" width="700" height="400" /> 
+
 ## K-Fold Cross Validations on the concrete.csv dataset
 I performed K-fold cross validations for both models using the concrete.csv dataset. 
 
