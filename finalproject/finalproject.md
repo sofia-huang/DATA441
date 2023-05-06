@@ -15,22 +15,25 @@ The dataset I am using is available on Kaggle. It contains 72,134 news articles 
 
 ### 4. Methodology
 _4.1 Preprocessing_
+
 First, I removed any columns I did not need, such as the serial number. Then I looked to see if there were any missing values and removed those as well. I also combined the article title and the article text into one column so they can be used together for classification. Then, I randomly shuffled the dataset to make sure the traning/testing sets have similar distributions that are representative of the whole data. 
 Next, I preprocessed the contents of the dataset. I focused on the article text column. So, to prepare it for classification I had to remove all of the punctuation, URLs, numbers, and any other unnecessary characters so that all that is left are the letters from “a” through “z”. I did this using the Regular Expressions function, “sub”.
 In the English language there are many frequently used words that do not contribute to the meaning of the text, such as, “a”, “the”, “and”, “is“, etc. I removed these from the text using NLTK’s list of stopwords, so the models can focus on the significant words in the text and improve its performance. Finally, I used NLTK’s PorterStemmer to normalize the text. The algorithm simplifies words by converting them to their roots. For example, the words “argue”, “argues”, “argued”, and “arguing” would all be converted to the root “argu”. After this step, I had clean and preprocessed data that can be used by the classification models.
 
 _4.2 Visualizations_
+
 Before training any machine learning models, I wanted to take a look at the data and see the differences between the true and fake news. I did this by creating Word Clouds for both the true and fake news texts. A Word Cloud is a data visualization technique where the size of the word represents its frequency within the dataset. Based on the results, we can see that the fake news had more emphasis on Donald Trump while the real news covered both Donald Trump and Hillary Clinton pretty evenly. We can also deduce that the news in this dataset is mostly from around the 2016 presidential elections and mostly pertains to US politics. 
 
 I also wanted to create a bar chart to show the top 20 most frequent words and bigrams for both true and fake news articles. Looking at the charts below, we can see that the fake news contained many more instances of “donald trump” than “hillary clinton”, while the true news had a much smaller difference of the two bigrams. The fake news also contained more attention-grabbing and controversial bigrams, such as “north korea” and “islamic state”. While the real news contained bigrams that relate to the credibility and the source of the news, like “image via”, “getty images”, and “fox news”. 
 
 _4.3 Vectorization_
+
 A popular vectorizing technique for text mining is TF-IDF which stands for “Term Frequency - Inverse Document Frequency”. This technique gives weights to the words in a document based on how common they are within the whole corpus, thus determining how significant they are. This gives more information compared to CountVectorizer which simply gets the word count of each word within a document. The vectorizing part refers to converting the text into a numerical representation. In this case, the words are converted into their TF-IDF scores.
 
 For the deep learning LSTM model, I used one hot encoding instead of the TF-IDF vectorizer. This improved the results for the LSTM model significantly. One hot encoding is a technique to create vectors for each word in a vocabulary. Although it does not convey word relationships and significance like TF-IDF does.
 
 | Vocabulary → | CAT | DOG |  ON | THE |
-|--------------------------------------|
+|--------------|-----|-----|-----|-----|
 |“CAT” vector →|  1  |  0  |  0  |  0  |
 |“THE” vector →|  0  |  0  |  0  |  1  |
 |“DOG” vector →|  0  |  1  |  0  |  0  |
@@ -51,7 +54,7 @@ LSTM stands for Long Short-Term Memory and is a sequential deep learning techniq
 The data was randomly shuffled and split into training and testing sets with the testing set being 25% of the data. I used GridSearchCV to tune the hyperparameters of the traditional machine learning models. I had to manually test the LSTM network due to my machine’s limits. This led me to change the word embedding technique used for LSTM from TF-IDF vectorization to one hot encoding as this significantly increased the results. I then performed k-fold cross validation using each of the optimal models to find the cross validated mean squared error. The results are shown in the table below. 
 
 | Model  | Logistic Regression | Naive Bayes |  Gradient Boosted | SVM    | LSTM  |
-|---------------------------------------------------------------------------------|
+|--------|---------------------|-------------|-------------------|--------|-------|
 |MSE     | 0.0667              | 0.1262      |  0.0603           | 0.0689 | 0.0102|
 |Accuracy| 0.9659              | 0.8636      |  0.9332           | 0.9260 | 0.9898|
 
@@ -66,17 +69,31 @@ A deep learning approach would be a good start to implement a system of fake new
 
 ### 7. References
 [1] Brownlee, J. (2020, August 14). Logistic regression for machine learning. MachineLearningMastery.com. Retrieved April 29, 2023, from https://machinelearningmastery.com/logistic-regression-for-machine-learning/ 
+
 [2] Guiding Tech Media. (n.d.). Support Vector Machines: A simple explanation. KDnuggets. Retrieved May 6, 2023, from https://www.kdnuggets.com/2016/07/support-vector-machines-simple-explanation.html 
+
 [3 Gupta, S. (n.d.). Word vector encoding in NLP (make machines understand text). enjoyalgorithms. Retrieved May 2, 2023, from https://www.enjoyalgorithms.com/blog/word-vector-encoding-in-nlp 
+
 [4] Huang, J. (2020). Detecting fake news with machine learning. Journal of Physics: Conference Series, 1693(1), 012158. https://doi.org/10.1088/1742-6596/1693/1/012158 
+
 [5] Khanam, Z., Alwasel, B. N., Sirafi, H., & Rashid, M. (2021). Fake news detection using machine learning approaches. IOP Conference Series: Materials Science and Engineering, 1099(1), 012040. https://doi.org/10.1088/1757-899x/1099/1/012040 
+
 [6] Kurama, V. (2021, April 9). Gradient boosting for classification. Paperspace Blog. Retrieved April 29, 2023, from https://blog.paperspace.com/gradient-boosting-for-classification/ 
+
 [7] Long short-term memory networks (LSTM)- simply explained! Data Basecamp. (2023, April 6). Retrieved April 29, 2023, from https://databasecamp.de/en/ml/lstms 
+
 [8] Ray, S. (2023, April 26). Naive Bayes classifier explained: Applications and practice problems of naive Bayes classifier. Analytics Vidhya. Retrieved April 29, 2023, from https://www.analyticsvidhya.com/blog/2017/09/naive-bayes-explained/#How_Do_Naive_Bayes_Algorithms_Work? 
+
 [9] Sairamvinay Vijayaraghavan, Ye Wang, Zhiyuan Guo, John Voong, Wenda Xu, Armand Nasseri, Jiaru Cai, Linda Li, Kevin Vuong, & Eshan Wadhwa. (2020). Fake News Detection with Different Models.
+
 [10] Shubha Mishra, Piyush Shukla, Ratish Agarwal, "Analyzing Machine Learning Enabled Fake News Detection Techniques for Diversified Datasets", Wireless Communications and Mobile Computing, vol. 2022, Article ID 1575365, 18 pages, 2022. https://doi.org/10.1155/2022/1575365
+
 [11] Srivastava, T. (2023, April 26). A complete guide to K-Nearest Neighbors (updated 2023). Analytics Vidhya. Retrieved April 29, 2023, from https://www.analyticsvidhya.com/blog/2018/03/introduction-k-neighbours-algorithm-clustering/ 
+
 [12] Thota, Aswini; Tilak, Priyanka; Ahluwalia, Simrat; and Lohia, Nibrat (2018) "Fake News Detection: A Deep Learning Approach," SMU Data Science Review: Vol. 1: No. 3, Article 10.
 Available at: https://scholar.smu.edu/datasciencereview/vol1/iss3/10
+
 [13] Verma, P. K., Agrawal, P., Prodan, R., Verma, P. K., Agrawal, P., & Prodan, R. (2021, February 25). Welfake dataset for fake news detection in text data. Zenodo. Retrieved April 29, 2023, from https://zenodo.org/record/4561253#.ZE1KWOzMLAJ 
+
+
 
