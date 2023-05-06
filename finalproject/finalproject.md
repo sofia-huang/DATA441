@@ -91,7 +91,7 @@ The confusion matrices for all classifiers are shown below.
 
 <img src="finalprojectgraphs/svc_cm.png" width="300" height="250" /> 
 
----------------------- LSTM ---------------------------
+------------------------ LSTM ---------------------------
 
 <img src="finalprojectgraphs/lstm_cm.png" width="300" height="250" />
 
