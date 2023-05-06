@@ -14,6 +14,7 @@ There have been many studies done regarding fake news detection using machine le
 The dataset I am using is available on Kaggle. It contains 72,134 news articles with 35,028 real and 37,106 fake news. The subject of the news in the data is mostly U.S. politics. The creators merged four popular news datasets (i.e. Kaggle, McIntire, Reuters, BuzzFeed Political) to “prevent overfitting of classifiers and to provide more text data for better ML training.” The dataset contains four columns: Serial number (starting from 0); Title (about the text news heading); Text (about the news content); and Label (0 = fake and 1 = real).
 
 ### 4. Methodology
+
 _4.1 Preprocessing_
 
 First, I removed any columns I did not need, such as the serial number. Then I looked to see if there were any missing values and removed those as well. I also combined the article title and the article text into one column so they can be used together for classification. Then, I randomly shuffled the dataset to make sure the traning/testing sets have similar distributions that are representative of the whole data. 
