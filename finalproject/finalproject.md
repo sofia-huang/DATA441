@@ -97,4 +97,6 @@ Available at: https://scholar.smu.edu/datasciencereview/vol1/iss3/10
 [13] Verma, P. K., Agrawal, P., Prodan, R., Verma, P. K., Agrawal, P., & Prodan, R. (2021, February 25). Welfake dataset for fake news detection in text data. Zenodo. Retrieved April 29, 2023, from https://zenodo.org/record/4561253#.ZE1KWOzMLAJ 
 
 
+The full Python notebook is linked here: [Final Project Python Notebook](https://colab.research.google.com/drive/1rJWRBh7u3xKdshzOyvnt9WAv2RMZdVwQ#scrollTo=sD_Lz2ACx3VO)
 
+[Back to Project Index](https://sofia-huang.github.io/DATA441/)
