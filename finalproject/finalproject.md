@@ -75,14 +75,25 @@ The data was randomly shuffled and split into training and testing sets with the
 
 The confusion matrices for all classifiers are shown below.
 
------------ Logistic Regression -------------------- Multinomial Naive Bayes -------------- Gradient Boosted Classifier ------------------
+------------------ Logistic Regression ---------------- 
 
-<img src="finalprojectgraphs/lr_cm.png" width="300" height="250"/> <img src="finalprojectgraphs/mnb_cm.png" width="300" height="250"/> 
+<img src="finalprojectgraphs/lr_cm.png" width="300" height="250"/> 
+
+---------------- Multinomial Naive Bayes --------------
+
+<img src="finalprojectgraphs/mnb_cm.png" width="300" height="250"/> 
+
+------------ Gradient Boosted Classifier --------------
+
 <img src="finalprojectgraphs/gbc_cm.png" width="300" height="250" /> 
 
--------- Support Vector Machine --------------------------- LSTM -------------------------------------------------------------------------
+------------- Support Vector Machine ------------------ 
 
-<img src="finalprojectgraphs/svc_cm.png" width="300" height="250" /> <img src="finalprojectgraphs/lstm_cm.png" width="300" height="250" />
+<img src="finalprojectgraphs/svc_cm.png" width="300" height="250" /> 
+
+---------------------- LSTM ---------------------------
+
+<img src="finalprojectgraphs/lstm_cm.png" width="300" height="250" />
 
 And here are the results in bar graph format for visual comparison.
 
