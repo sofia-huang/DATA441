@@ -25,7 +25,11 @@ _4.2 Visualizations_
 
 Before training any machine learning models, I wanted to take a look at the data and see the differences between the true and fake news. I did this by creating Word Clouds for both the true and fake news texts. A Word Cloud is a data visualization technique where the size of the word represents its frequency within the dataset. Based on the results, we can see that the fake news had more emphasis on Donald Trump while the real news covered both Donald Trump and Hillary Clinton pretty evenly. We can also deduce that the news in this dataset is mostly from around the 2016 presidential elections and mostly pertains to US politics. 
 
+  <img src="finalprojectgraphs/fakewordcloud2.png" width="500" height="400" />    <img src="finalprojectgraphs/truewordcloud2.png" width="500" height="400" /> 
+
 I also wanted to create a bar chart to show the top 20 most frequent words and bigrams for both true and fake news articles. Looking at the charts below, we can see that the fake news contained many more instances of “donald trump” than “hillary clinton”, while the true news had a much smaller difference of the two bigrams. The fake news also contained more attention-grabbing and controversial bigrams, such as “north korea” and “islamic state”. While the real news contained bigrams that relate to the credibility and the source of the news, like “image via”, “getty images”, and “fox news”. 
+
+  <img src="finalprojectgraphs/topbigramfake.png" width="500" height="400" />    <img src="finalprojectgraphs/topbigramtrue.png" width="500" height="400" /> 
 
 _4.3 Vectorization_
 
@@ -40,15 +44,25 @@ For the deep learning LSTM model, I used one hot encoding instead of the TF-IDF 
 |“DOG” vector →|  0  |  1  |  0  |  0  |
 
 _4.4 Classification Models_
+
 Logistic Regression
+
 A supervised machine learning algorithm that can be used to model the likelihood that the target variable is a certain class. In this case, either 0(Fake) or 1(True). The logistic or sigmoid function is used to predict the probability that the input variable is in a certain class.
+
 Naive Bayes
+
 Uses Bayes Theorem, which is used to calculate the probability of an event happening given the probability that another event has already occurred. It is “naive” because the model assumes all of the input variables are independent of each other. 
+
 Gradient Boosted
+
 This algorithm sequentially builds models that correct the errors of the previous ones. The additive models are trained on the errors of the previous one. So, multiple “weak learners” are added together to create a stronger learner. The strong learner is an ensemble of decision trees. The loss function that is trying to be minimized in the case of classification is the log-likelihood function. There are a lot of hyperparameters to be tuned to reach an effective model which can result in a time-consuming and resource-intensive grid search. However, this model is also prone to overfitting so using regularization techniques are important to prevent this. 
+
 Support Vector Machines
-	A support vector machine is a supervised learning algorithm. It is based on the idea of finding a hyperplane that best divides the dataset. Support vectors are the data points closest to the hyperplane and if removed would cause the best hyperplane to change, in other words they are critical points. The margins are the distances between the hyperplane and the closest data point from both classes. The goal is to choose a hyperplane with the greatest margins using training set data. In most cases, the data will not be able to be cleanly split using a line, in other words, not linearly separable. So, we map the data points into a higher dimension (ie. 2D to 3D, aka. kernelling) and now the hyperplane is a plane rather than a line. The data continues to get mapped into higher and higher dimensions until a hyperplane can be formed to separate the data points into the correct classes. 
+
+A support vector machine is a supervised learning algorithm. It is based on the idea of finding a hyperplane that best divides the dataset. Support vectors are the data points closest to the hyperplane and if removed would cause the best hyperplane to change, in other words they are critical points. The margins are the distances between the hyperplane and the closest data point from both classes. The goal is to choose a hyperplane with the greatest margins using training set data. In most cases, the data will not be able to be cleanly split using a line, in other words, not linearly separable. So, we map the data points into a higher dimension (ie. 2D to 3D, aka. kernelling) and now the hyperplane is a plane rather than a line. The data continues to get mapped into higher and higher dimensions until a hyperplane can be formed to separate the data points into the correct classes. 
+	
 LSTM
+
 LSTM stands for Long Short-Term Memory and is a sequential deep learning technique. It is a type of recurrent neural network or RNN that can learn long-term dependencies and retain long-term information unlike regular RNNs. They are capable of remembering previous information and using it to process current input. Its structure consists of three gates: forget gate, input gate, and output gate. In the forget gate, the neural network determines what information is useful and to be kept, while unnecessary information is discarded or “forgotten”. In the input gate, the neural network quantifies the importance of the new input information. The output gate lets the result of the current task at hand through by using the information stored previously. This type of neural network is popular in NLP problems as it can take into account the sequential nature of words in text. 
 
 ### 5. Results
@@ -60,6 +74,19 @@ The data was randomly shuffled and split into training and testing sets with the
 |Accuracy| 0.9659              | 0.8636      |  0.9332           | 0.9260 | 0.9898|
 
 The confusion matrices for all classifiers are shown below.
+
+----------- Logistic Regression -------------------- Multinomial Naive Bayes -------------- Gradient Boosted Classifier ------------------
+
+<img src="finalprojectgraphs/lr_cm.png" width="300" height="250"/> <img src="finalprojectgraphs/mnb_cm.png" width="300" height="250"/> 
+<img src="finalprojectgraphs/gbc_cm.png" width="300" height="250" /> 
+
+-------- Support Vector Machine --------------------------- LSTM -------------------------------------------------------------------------
+
+<img src="finalprojectgraphs/svc_cm.png" width="300" height="250" /> <img src="finalprojectgraphs/lstm_cm.png" width="300" height="250" />
+
+And here are the results in bar graph format for visual comparison.
+
+<img src="finalprojectgraphs/acc_bar.png" width="500" height="400" />    <img src="finalprojectgraphs/mse_bar.png" width="500" height="400" /> 
 
 We can see that the LSTM network definitely performed the best with the highest accuracy and lowest mean squared error out of the classifiers tested. Naive Bayes had the worst performance.
 
