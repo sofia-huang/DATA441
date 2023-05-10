@@ -69,9 +69,13 @@ LSTM stands for Long Short-Term Memory and is a sequential deep learning techniq
 The data was randomly shuffled and split into training and testing sets with the testing set being 25% of the data. I used GridSearchCV to tune the hyperparameters of the traditional machine learning models. I had to manually test the LSTM network due to my machine’s limits. This led me to change the word embedding technique used for LSTM from TF-IDF vectorization to one hot encoding as this significantly increased the results. The final models that I tested and their optimal hyper parameters are below: 
 
 LogisticRegression(C=100, max_iter=100000)
+
 MultinomialNB(alpha=0.001)
+
 GradientBoostingClassifier(learning_rate=0.2, max_depth=8, n_estimators=50)
+
 SVC(C=1, degree=1, gamma=1, kernel=’poly’)
+
 LSTM:
 <img src="finalprojectgraphs/lstm_model.png" width="300" height="250"/> 
 
