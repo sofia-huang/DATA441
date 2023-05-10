@@ -66,12 +66,26 @@ LSTM
 LSTM stands for Long Short-Term Memory and is a sequential deep learning technique. It is a type of recurrent neural network or RNN that can learn long-term dependencies and retain long-term information unlike regular RNNs. They are capable of remembering previous information and using it to process current input. Its structure consists of three gates: forget gate, input gate, and output gate. In the forget gate, the neural network determines what information is useful and to be kept, while unnecessary information is discarded or “forgotten”. In the input gate, the neural network quantifies the importance of the new input information. The output gate lets the result of the current task at hand through by using the information stored previously. This type of neural network is popular in NLP problems as it can take into account the sequential nature of words in text. 
 
 ### 5. Results
-The data was randomly shuffled and split into training and testing sets with the testing set being 25% of the data. I used GridSearchCV to tune the hyperparameters of the traditional machine learning models. I had to manually test the LSTM network due to my machine’s limits. This led me to change the word embedding technique used for LSTM from TF-IDF vectorization to one hot encoding as this significantly increased the results. I then performed k-fold cross validation using each of the optimal models to find the cross validated mean squared error. The results are shown in the table below. 
+The data was randomly shuffled and split into training and testing sets with the testing set being 25% of the data. I used GridSearchCV to tune the hyperparameters of the traditional machine learning models. I had to manually test the LSTM network due to my machine’s limits. This led me to change the word embedding technique used for LSTM from TF-IDF vectorization to one hot encoding as this significantly increased the results. The final models that I tested and their optimal hyper parameters are below: 
+
+LogisticRegression(C=100, max_iter=100000)
+MultinomialNB(alpha=0.001)
+GradientBoostingClassifier(learning_rate=0.2, max_depth=8, n_estimators=50)
+SVC(C=1, degree=1, gamma=1, kernel=’poly’)
+LSTM:
+<img src="finalprojectgraphs/lstm_model.png" width="300" height="250"/> 
+
+I then performed k-fold cross validation using each of the optimal models to find the cross validated weighted average F1 score and the accuracy. F1 score is a common metric used for binary classification evaluation and is calculated using precision and recall.
+
+$$ F1 = {2 {precision * recall \over precision + recall} = {2tp \over 2tp + fp + fn}} $$, where tp = true positives, fp = false positives, fn = false negatives.
+
+I obtained the results using sklearn’s classification report. The results are shown in the table below. 
+
 
 | Model  | Logistic Regression | Naive Bayes |  Gradient Boosted | SVM    | LSTM  |
 |--------|---------------------|-------------|-------------------|--------|-------|
-|MSE     | 0.0667              | 0.1262      |  0.0603           | 0.0689 | 0.0102|
-|Accuracy| 0.9659              | 0.8636      |  0.9332           | 0.9260 | 0.9898|
+|Weighted Avg F1 Score     | 0.9320|0.8727|0.9326|0.9845|*0.9342*|
+|Accuracy|0.9320|0.8727|0.9327|0.9845|*0.9342*|
 
 The confusion matrices for all classifiers are shown below.
 
@@ -99,7 +113,7 @@ And here are the results in bar graph format for visual comparison.
 
 <img src="finalprojectgraphs/acc_bar.png" width="500" height="400" />    <img src="finalprojectgraphs/mse_bar.png" width="500" height="400" /> 
 
-We can see that the LSTM network definitely performed the best with the highest accuracy and lowest mean squared error out of the classifiers tested. Naive Bayes had the worst performance.
+We can see that the LSTM network definitely performed the best with the highest accuracy and F1 score out of the classifiers tested. Naive Bayes had the worst performance. Logistic Regression, Naive Bayes, and Support Vector all had similar and decent accuracy scores around 0.93.
 
 ### 6. Conclusion
 The purpose of this research was to experiment and find the best performing model for fake news detection and classification in hopes of creating a system that can take all articles and social media posts as input and flag those that are classified as fake so that they can be manually checked. It was found that all of the models were capable of accurately classifying the news, with the LSTM network outperforming the traditional machine learning models. The models were able to detect patterns within the words used in the articles to classify them as fake or not. So, comparing the facts is not necessarily required in order to determine the legitimacy of an article. Instead, the word patterns can be used by machine learning. 
