@@ -77,15 +77,17 @@ LSTM:
 
 I then performed k-fold cross validation using each of the optimal models to find the cross validated weighted average F1 score and the accuracy. F1 score is a common metric used for binary classification evaluation and is calculated using precision and recall.
 
-$$ F1 = {2 {precision * recall \over precision + recall} = {2tp \over 2tp + fp + fn}} $$, where tp = true positives, fp = false positives, fn = false negatives.
+$`\sqrt{3x-1}+(1+x)^2`$
+
+$` F1 = {2 {precision * recall \over precision + recall} = {2tp \over 2tp + fp + fn}} `$, where tp = true positives, fp = false positives, fn = false negatives.
 
 I obtained the results using sklearn’s classification report. The results are shown in the table below. 
 
 
 | Model  | Logistic Regression | Naive Bayes |  Gradient Boosted | SVM    | LSTM  |
 |--------|---------------------|-------------|-------------------|--------|-------|
-|Weighted Avg F1 Score     | 0.9320|0.8727|0.9326|0.9845|*0.9342*|
-|Accuracy|0.9320|0.8727|0.9327|0.9845|*0.9342*|
+|Weighted Avg F1 Score     | 0.9320|0.8727|0.9326|0.9845|**0.9342**|
+|Accuracy|0.9320|0.8727|0.9327|0.9845|**0.9342**|
 
 The confusion matrices for all classifiers are shown below.
 
@@ -108,10 +110,6 @@ The confusion matrices for all classifiers are shown below.
 ------------------------ LSTM ---------------------------
 
 <img src="finalprojectgraphs/lstm_cm.png" width="300" height="250" />
-
-And here are the results in bar graph format for visual comparison.
-
-<img src="finalprojectgraphs/acc_bar.png" width="500" height="400" />    <img src="finalprojectgraphs/mse_bar.png" width="500" height="400" /> 
 
 We can see that the LSTM network definitely performed the best with the highest accuracy and F1 score out of the classifiers tested. Naive Bayes had the worst performance. Logistic Regression, Naive Bayes, and Support Vector all had similar and decent accuracy scores around 0.93.
 
