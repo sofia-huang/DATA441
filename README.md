@@ -8,4 +8,4 @@ Project 3: [Gradient Boosting Algorithm](project3/project3.md)
 
 Project 4: [Generalized Additive Model vs Nadaraya-Watson Regressor](project4/project4.md)
 
-Final Project: [Fake News Classification](finalproject/finalproject.md)
+
