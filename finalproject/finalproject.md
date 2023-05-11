@@ -1,6 +1,6 @@
 ## Final Project
 # Fake News Classification
-#### Sofia Huang '23 | DATA 441 - Adv. Applied Machine Learning
+#### Sofia Huang | DATA 441 - Adv. Applied Machine Learning
 
 ### 1. Introduction
 Although it can have many nuanced definitions, fake news can generally be understood as a false narrative published as if it were true. Before social media, fake news was more like propaganda promoted by leaders to create a widespread specific point of view or belief. Nowadays, it is much easier to spread information, both true and false. 
