@@ -81,7 +81,7 @@ LSTM:
 
 I then performed k-fold cross validation using each of the optimal models to find the cross validated weighted average F1 score and the accuracy. F1 score is a common metric used for binary classification evaluation and is calculated using precision and recall.
 
-$ F1 = {2 {precision * recall \over precision + recall} = {2tp \over 2tp + fp + fn}} $, where tp = true positives, fp = false positives, fn = false negatives.
+$ F1 = {2 * {precision * recall \over precision + recall} = {2tp \over 2tp + fp + fn}} $, where tp = true positives, fp = false positives, fn = false negatives.
 
 I obtained the results using sklearn’s classification report. The results are shown in the table below. 
 
