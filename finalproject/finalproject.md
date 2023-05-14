@@ -88,8 +88,8 @@ I obtained the results using sklearn’s classification report. The results are 
 
 | Model  | Logistic Regression | Naive Bayes |  Gradient Boosted | SVM    | LSTM  |
 |--------|---------------------|-------------|-------------------|--------|-------|
-|Weighted Avg F1 Score     | 0.9320|0.8727|0.9326|0.9845|**0.9342**|
-|Accuracy|0.9320|0.8727|0.9327|0.9845|**0.9342**|
+|Weighted Avg F1 Score     | 0.9320|0.8727|0.9326|0.9342|**0.9845**|
+|Accuracy|0.9320|0.8727|0.9327|0.9342|**0.9845**|
 
 The confusion matrices for all classifiers are shown below.
 
